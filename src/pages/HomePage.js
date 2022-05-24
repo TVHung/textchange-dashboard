@@ -180,8 +180,9 @@ export default () => (
       path={Routes.ChartManager.path}
       component={ChartManager}
     />
+
     {/* components */}
-    <RouteWithSidebar
+    {/* <RouteWithSidebar
       exact
       path={Routes.Accordions.path}
       component={Accordion}
@@ -208,10 +209,10 @@ export default () => (
     <RouteWithSidebar exact path={Routes.Tables.path} component={Tables} />
     <RouteWithSidebar exact path={Routes.Tabs.path} component={Tabs} />
     <RouteWithSidebar exact path={Routes.Tooltips.path} component={Tooltips} />
-    <RouteWithSidebar exact path={Routes.Toasts.path} component={Toasts} />
+    <RouteWithSidebar exact path={Routes.Toasts.path} component={Toasts} /> */}
 
     {/* documentation */}
-    <RouteWithSidebar
+    {/* <RouteWithSidebar
       exact
       path={Routes.DocsOverview.path}
       component={DocsOverview}
@@ -245,7 +246,7 @@ export default () => (
       exact
       path={Routes.DocsChangelog.path}
       component={DocsChangelog}
-    />
+    /> */}
 
     <Redirect to={Routes.NotFound.path} />
   </Switch>

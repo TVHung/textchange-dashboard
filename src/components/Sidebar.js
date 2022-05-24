@@ -11,6 +11,7 @@ import {
   faPager,
   faChartBar,
   faUserShield,
+  faFileAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   Nav,
@@ -205,7 +206,7 @@ export default (props = {}) => {
                 link={Routes.Settings.path}
               />
 
-              {/* <CollapsableNavItem
+              <CollapsableNavItem
                 eventKey="examples/"
                 title="Page Examples"
                 icon={faFileAlt}
@@ -226,7 +227,7 @@ export default (props = {}) => {
                   title="500 Server Error"
                   link={Routes.ServerError.path}
                 />
-              </CollapsableNavItem> */}
+              </CollapsableNavItem>
 
               <Dropdown.Divider className="my-3 border-indigo" />
 

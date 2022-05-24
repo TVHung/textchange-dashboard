@@ -12,6 +12,7 @@ import {
   faLock,
   faLockOpen,
   faTrashAlt,
+  faUserShield,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   Col,
@@ -31,7 +32,6 @@ import { Link } from "react-router-dom";
 import { Routes } from "../routes";
 import { pageVisits, pageTraffic, pageRanking } from "../data/tables";
 import transactions from "../data/transactions";
-import user from "../data/user";
 import commands from "../data/commands";
 import avt from "../assets/img/avt.jpg";
 import { formatPrice } from "../utils/common";
@@ -256,8 +256,8 @@ export const RankingTable = () => {
   );
 };
 
-export const PostTable = () => {
-  const totalTransactions = transactions.length;
+export const PostTable = ({ posts, actionPost }) => {
+  const totalPosts = posts.length;
 
   const TableRow = (props) => {
     const { id, images, name, address, category, price, is_sold, is_block } =
@@ -273,7 +273,11 @@ export const PostTable = () => {
         </td>
         <td>
           <span className="fw-normal">
-            <Image src={images[0].image_url} height={50} alt="post-image" />
+            <Image
+              src={images[0] ? images[0].image_url : avt}
+              height={50}
+              alt="post-image"
+            />
           </span>
         </td>
         <td>
@@ -308,13 +312,28 @@ export const PostTable = () => {
               </span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item>
+              <Dropdown.Item onClick={() => actionPost(id, "detail")}>
                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
               </Dropdown.Item>
-              <Dropdown.Item>
-                <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
-              </Dropdown.Item>
-              <Dropdown.Item className="text-danger">
+              {is_block == 1 ? (
+                <Dropdown.Item
+                  className="text-success"
+                  onClick={() => actionPost(id, "deleteBlock")}
+                >
+                  <FontAwesomeIcon icon={faLockOpen} className="me-2" /> Mở khóa
+                </Dropdown.Item>
+              ) : (
+                <Dropdown.Item
+                  className="text-danger"
+                  onClick={() => actionPost(id, "addBlock")}
+                >
+                  <FontAwesomeIcon icon={faLock} className="me-2" /> Khóa
+                </Dropdown.Item>
+              )}
+              <Dropdown.Item
+                className="text-danger"
+                onClick={() => actionPost(id, "delete")}
+              >
                 <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
               </Dropdown.Item>
             </Dropdown.Menu>
@@ -341,8 +360,8 @@ export const PostTable = () => {
             </tr>
           </thead>
           <tbody>
-            {transactions.map((t) => (
-              <TableRow key={`transaction-${t.invoiceNumber}`} {...t} />
+            {posts.map((t, index) => (
+              <TableRow key={`transaction-${index}`} {...t} />
             ))}
           </tbody>
         </Table>
@@ -359,7 +378,7 @@ export const PostTable = () => {
             </Pagination>
           </Nav>
           <small className="fw-bold">
-            Showing <b>{totalTransactions}</b> out of <b>25</b> entries
+            Showing <b>{totalPosts}</b> out of <b>25</b> entries
           </small>
         </Card.Footer>
       </Card.Body>
@@ -367,8 +386,8 @@ export const PostTable = () => {
   );
 };
 
-export const UserTable = () => {
-  const totalTransactions = transactions.length;
+export const UserTable = ({ users, actionUser }) => {
+  const totalUsers = users.length;
 
   const TableRow = (props) => {
     const { id, name, email, is_admin, is_block } = props;
@@ -390,7 +409,7 @@ export const UserTable = () => {
         </td>
         <td>
           <span className={`fw-normal text-${statusVariant}`}>
-            {is_block == 0 ? "Không" : "Có"}
+            {is_block == 1 ? "Có" : "Không"}
           </span>
         </td>
         <td>
@@ -412,15 +431,41 @@ export const UserTable = () => {
             </Dropdown.Toggle>
             <Dropdown.Menu>
               {is_block == 1 ? (
-                <Dropdown.Item className="text-success">
+                <Dropdown.Item
+                  className="text-success"
+                  onClick={() => actionUser(id, "deleteBlock")}
+                >
                   <FontAwesomeIcon icon={faLockOpen} className="me-2" /> Mở khóa
                 </Dropdown.Item>
               ) : (
-                <Dropdown.Item className="text-danger">
+                <Dropdown.Item
+                  className="text-danger"
+                  onClick={() => actionUser(id, "addBlock")}
+                >
                   <FontAwesomeIcon icon={faLock} className="me-2" /> Khóa
                 </Dropdown.Item>
               )}
-              <Dropdown.Item className="text-danger">
+              {is_admin == 1 ? (
+                <Dropdown.Item
+                  className="text-danger"
+                  onClick={() => actionUser(id, "deleteAdmin")}
+                >
+                  <FontAwesomeIcon icon={faUserShield} className="me-2" /> Xóa
+                  quyền quản trị
+                </Dropdown.Item>
+              ) : (
+                <Dropdown.Item
+                  className="text-success"
+                  onClick={() => actionUser(id, "addAdmin")}
+                >
+                  <FontAwesomeIcon icon={faUserShield} className="me-2" /> Chỉ
+                  định làm quản trị viên
+                </Dropdown.Item>
+              )}
+              <Dropdown.Item
+                className="text-danger"
+                onClick={() => actionUser(id, "delete")}
+              >
                 <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Xóa
               </Dropdown.Item>
             </Dropdown.Menu>
@@ -445,8 +490,8 @@ export const UserTable = () => {
             </tr>
           </thead>
           <tbody>
-            {user.map((t) => (
-              <TableRow key={`transaction-${t.invoiceNumber}`} {...t} />
+            {users.map((t, index) => (
+              <TableRow key={`user-${index}`} {...t} />
             ))}
           </tbody>
         </Table>
@@ -463,7 +508,7 @@ export const UserTable = () => {
             </Pagination>
           </Nav>
           <small className="fw-bold">
-            Showing <b>{totalTransactions}</b> out of <b>25</b> entries
+            Showing <b>{totalUsers}</b> out of <b>25</b> entries
           </small>
         </Card.Footer>
       </Card.Body>
@@ -556,8 +601,8 @@ export const TransactionsTable = () => {
             </tr>
           </thead>
           <tbody>
-            {transactions.map((t) => (
-              <TableRow key={`transaction-${t.invoiceNumber}`} {...t} />
+            {transactions.map((t, index) => (
+              <TableRow key={`transaction-${index}`} {...t} />
             ))}
           </tbody>
         </Table>

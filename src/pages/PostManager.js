@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faSearch } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -9,12 +9,47 @@ import {
   ButtonGroup,
   Breadcrumb,
   InputGroup,
-  Dropdown,
 } from "@themesberg/react-bootstrap";
+import axios from "axios";
 
 import { PostTable } from "../components/Tables";
+import { apiPost, apiPostManager, headers } from "../constants";
 
 export default () => {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    fetchPosts();
+    return () => {};
+  }, []);
+
+  const fetchPosts = async () => {
+    await axios
+      .get(apiPostManager, { headers: headers })
+      .then((res) => {
+        console.log(res);
+        setPosts(res.data.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const actionPost = async (user_id, action) => {
+    switch (action) {
+      case "delete":
+        console.log("delete");
+        break;
+      case "addBlock":
+        console.log("addBlock");
+        break;
+      case "deleteBlock":
+        console.log("deleteBlock");
+        break;
+      default:
+        break;
+    }
+  };
   return (
     <>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
@@ -55,7 +90,7 @@ export default () => {
         </Row>
       </div>
 
-      <PostTable />
+      <PostTable posts={posts} actionPost={actionPost} />
     </>
   );
 };

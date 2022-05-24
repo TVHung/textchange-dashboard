@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheck,
@@ -18,8 +18,51 @@ import {
 } from "@themesberg/react-bootstrap";
 
 import { UserTable } from "../components/Tables";
+import axios from "axios";
+import { apiGetUser, headers } from "../constants";
 
 export default () => {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    fetchUsers();
+    return () => {};
+  }, []);
+
+  const fetchUsers = async () => {
+    await axios
+      .get(apiGetUser, { headers: headers })
+      .then((res) => {
+        console.log(res);
+        setUsers(res.data.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const actionUser = async (user_id, action) => {
+    switch (action) {
+      case "delete":
+        console.log("delete");
+        break;
+      case "addAdmin":
+        console.log("addAdmin");
+        break;
+      case "deleteAdmin":
+        console.log("deleteAdmin");
+        break;
+      case "addBlock":
+        console.log("addBlock");
+        break;
+      case "deleteBlock":
+        console.log("deleteBlock");
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
@@ -87,7 +130,7 @@ export default () => {
         </Row>
       </div>
 
-      <UserTable />
+      <UserTable users={users} actionUser={actionUser} />
     </>
   );
 };
