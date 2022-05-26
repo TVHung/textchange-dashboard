@@ -13,10 +13,20 @@ import {
 import axios from "axios";
 
 import { PostTable } from "../components/Tables";
-import { apiPost, apiPostManager, headers } from "../constants";
+import {
+  apiPost,
+  apiPostManager,
+  apiSetBlockPost,
+  headers,
+} from "../constants";
+// import { Modal } from "react-bootstrap";
 
 export default () => {
   const [posts, setPosts] = useState([]);
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   useEffect(() => {
     fetchPosts();
@@ -35,16 +45,41 @@ export default () => {
       });
   };
 
-  const actionPost = async (user_id, action) => {
+  const setBlockPost = async (post_id) => {
+    await axios
+      .post(`${apiSetBlockPost}/${post_id}`, { headers: headers })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const setDeletePost = async (post_id) => {
+    // await axios
+    //   .post(`${apiSetAdminUser}/${user_id}`, { headers: headers })
+    //   .then((res) => {
+    //     console.log(res);
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //   });
+  };
+
+  const actionPost = async (post_id, action) => {
     switch (action) {
       case "delete":
-        console.log("delete");
+        setDeletePost(post_id);
         break;
       case "addBlock":
-        console.log("addBlock");
+        setBlockPost(post_id);
         break;
       case "deleteBlock":
-        console.log("deleteBlock");
+        setBlockPost(post_id);
+        break;
+      case "detailPost":
+        window.location.href = `/volt-react-dashboard?#/post-manager/detail/${post_id}`;
         break;
       default:
         break;
@@ -52,6 +87,23 @@ export default () => {
   };
   return (
     <>
+      {/* <Button variant="primary" onClick={handleShow}>
+        Launch demo modal
+      </Button>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modal heading</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal> */}
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
         <div className="d-block mb-4 mb-md-0">
           <Breadcrumb

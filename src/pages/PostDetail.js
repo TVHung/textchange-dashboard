@@ -168,8 +168,6 @@ export default () => {
           </Col>
         </Row>
       </div>
-
-      <UserTable users={users} actionUser={actionUser} />
     </>
   );
 };

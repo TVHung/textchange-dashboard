@@ -3,6 +3,7 @@ export const Routes = {
   Presentation: { path: "/" },
   DashboardOverview: { path: "/dashboard/overview" },
   PostManager: { path: "/post-manager" },
+  PostDetail: { path: "/post-manager/detail/:id" },
   UserManager: { path: "/user-manager" },
   ChartManager: { path: "/chart-manager" },
   Settings: { path: "/settings" },

@@ -8,6 +8,7 @@ import Upgrade from "./Upgrade";
 import DashboardOverview from "./dashboard/DashboardOverview";
 import Transactions from "./Transactions";
 import PostManager from "./PostManager";
+import PostDetail from "./PostDetail";
 import UserManager from "./UserManager";
 import ChartManager from "./ChartManager";
 import Settings from "./Settings";
@@ -148,6 +149,11 @@ export default () => (
     />
 
     {/* pages */}
+    <RouteWithLoader
+      exact
+      path={Routes.PostDetail.path}
+      component={PostDetail}
+    />
     <RouteWithSidebar
       exact
       path={Routes.DashboardOverview.path}
@@ -182,7 +188,7 @@ export default () => (
     />
 
     {/* components */}
-    {/* <RouteWithSidebar
+    <RouteWithSidebar
       exact
       path={Routes.Accordions.path}
       component={Accordion}
@@ -209,7 +215,7 @@ export default () => (
     <RouteWithSidebar exact path={Routes.Tables.path} component={Tables} />
     <RouteWithSidebar exact path={Routes.Tabs.path} component={Tabs} />
     <RouteWithSidebar exact path={Routes.Tooltips.path} component={Tooltips} />
-    <RouteWithSidebar exact path={Routes.Toasts.path} component={Toasts} /> */}
+    <RouteWithSidebar exact path={Routes.Toasts.path} component={Toasts} />
 
     {/* documentation */}
     {/* <RouteWithSidebar

@@ -32,26 +32,27 @@ import {
   SalesValueChartphone,
 } from "./Charts";
 
-import Profile1 from "../assets/img/avt.jpg";
-import ProfileCover from "../assets/img/profile-cover.jpg";
-
 import teamMembers from "../data/teamMembers";
 
-export const ProfileCardWidget = () => {
+export const ProfileCardWidget = ({ userProfile }) => {
   return (
     <Card border="light" className="text-center p-0 mb-4">
       <div
-        style={{ backgroundImage: `url(${ProfileCover})` }}
+        style={{
+          backgroundImage: `url(${userProfile && userProfile.avatar_url})`,
+        }}
         className="profile-cover rounded-top"
       />
       <Card.Body className="pb-0">
         <Card.Img
-          src={Profile1}
+          src={userProfile && userProfile.avatar_url}
           alt="Neil Portrait"
           className="user-avatar large-avatar rounded-circle mx-auto mt-n7 mb-4"
         />
-        <Card.Title>Trương Hùng</Card.Title>
-        <Card.Text className="text-gray mb-2">Bắc Ninh</Card.Text>
+        <Card.Title>{userProfile && userProfile.name}</Card.Title>
+        <Card.Text className="text-gray mb-2">
+          {userProfile && userProfile.address}
+        </Card.Text>
       </Card.Body>
     </Card>
   );

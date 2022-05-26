@@ -92,4 +92,10 @@ export default [
     image: UserManagerImg,
     link: Routes.ChartManager.path,
   },
+  {
+    id: 14,
+    name: "500",
+    image: UserManagerImg,
+    link: Routes.PostDetail.path,
+  },
 ];

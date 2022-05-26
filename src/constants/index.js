@@ -9,6 +9,8 @@ export const apiGetAccountProfile = `${api}/auth/profile-user`;
 export const apiUserProfile = `${api}/profile-user`;
 export const apiGetUser = `${api}/users`;
 export const apiChangePass = `${api}/auth/change-pass`;
+export const apiSetBlockUser = `${api}/auth/set-block-user`;
+export const apiSetAdminUser = `${api}/auth/set-admin-user`;
 //profile
 export const apiProfile = `${api}/profiles`;
 
@@ -24,6 +26,7 @@ export const apiFetchMyPosts = `${api}/my-posts`;
 export const apiFetchUserPosts = `${api}/user-posts`;
 export const apiFetchRecommendPosts = `${api}/recommend-posts`;
 export const apiWishList = `${api}/wish-list`;
+export const apiSetBlockPost = `${api}/set-block-post`;
 
 //api post trade
 export const apiPostTrade = `${api}/post-trades`;
