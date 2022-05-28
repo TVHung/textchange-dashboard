@@ -28,9 +28,9 @@ export default [
   },
   {
     id: 3,
-    name: "Settings",
+    name: "Profile",
     image: SettingsImg,
-    link: Routes.Settings.path,
+    link: Routes.Profile.path,
   },
   {
     id: 4,
@@ -88,12 +88,6 @@ export default [
   },
   {
     id: 13,
-    name: "500",
-    image: UserManagerImg,
-    link: Routes.ChartManager.path,
-  },
-  {
-    id: 14,
     name: "500",
     image: UserManagerImg,
     link: Routes.PostDetail.path,

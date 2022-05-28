@@ -41,7 +41,16 @@ export default (props) => {
     if (getCookie("access_token") != "") {
       try {
         await axios
-          .post(apiLogout, { data: "mydata" }, { headers: headers })
+          .post(
+            apiLogout,
+            { data: "mydata" },
+            {
+              headers: {
+                "Content-type": "application/json",
+                Authorization: `Bearer ${getCookie("access_token")}`,
+              },
+            }
+          )
           .then((res) => {
             deleteCookie("access_token");
             setTimeout(() => {
@@ -67,7 +76,10 @@ export default (props) => {
       try {
         await axios
           .get(apiGetAccountProfile, {
-            headers: headers,
+            headers: {
+              "Content-type": "application/json",
+              Authorization: `Bearer ${getCookie("access_token")}`,
+            },
           })
           .then((res) => {
             const userProfile = res.data.data;
@@ -117,7 +129,7 @@ export default (props) => {
                 <Dropdown.Item
                   className="fw-bold"
                   onClick={() =>
-                    (window.location.href = "/volt-react-dashboard?#/settings")
+                    (window.location.href = "/volt-react-dashboard?#/profile")
                   }
                 >
                   <FontAwesomeIcon icon={faUserCircle} className="me-2" /> My

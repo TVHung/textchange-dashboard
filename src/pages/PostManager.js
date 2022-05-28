@@ -20,9 +20,12 @@ import {
   headers,
 } from "../constants";
 import { Modal } from "@themesberg/react-bootstrap";
+import { getCookie } from "../utils/cookie";
+import Preloader from "../components/Preloader";
 
 export default () => {
   const [posts, setPosts] = useState([]);
+  const [loaded, setLoaded] = useState(false);
 
   const [showDefault, setShowDefault] = useState(false);
   const [mess, setMess] = useState({
@@ -39,22 +42,28 @@ export default () => {
 
   useEffect(() => {
     fetchPosts();
-    console.log("post manager");
+    setLoaded(true);
     return () => {
       setPosts([]);
       setShowDefault(false);
       setData({});
       setMess({});
+      setLoaded(false);
     };
   }, []);
 
   const fetchPosts = async () => {
-    console.log("post", headers);
     await axios
-      .get(apiPostManager, { headers: headers })
+      .get(apiPostManager, {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${getCookie("access_token")}`,
+        },
+      })
       .then((res) => {
         console.log(res);
         setPosts(res.data.data);
+        setLoaded(false);
       })
       .catch((error) => {
         console.error(error);
@@ -63,9 +72,15 @@ export default () => {
 
   const setBlockPost = async (post_id) => {
     await axios
-      .post(`${apiSetBlockPost}/${post_id}`, { headers: headers })
+      .post(`${apiSetBlockPost}/${post_id}`, {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${getCookie("access_token")}`,
+        },
+      })
       .then((res) => {
         console.log(res);
+        fetchPosts();
       })
       .catch((error) => {
         console.error(error);
@@ -73,14 +88,20 @@ export default () => {
   };
 
   const setDeletePost = async (post_id) => {
-    // await axios
-    //   .post(`${apiSetAdminUser}/${user_id}`, { headers: headers })
-    //   .then((res) => {
-    //     console.log(res);
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //   });
+    await axios
+      .delete(`${apiPost}/${post_id}`, {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${getCookie("access_token")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        fetchPosts();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   const actionPost = (post_id, action) => {
@@ -137,6 +158,7 @@ export default () => {
   };
   return (
     <>
+      <Preloader show={loaded} />
       <Modal as={Modal.Dialog} centered show={showDefault} onHide={handleClose}>
         <Modal.Header>
           <Modal.Title className="h6">{mess.header}</Modal.Title>
@@ -170,16 +192,6 @@ export default () => {
             <Breadcrumb.Item active>Quản lý bài đăng</Breadcrumb.Item>
           </Breadcrumb>
           <h4>Quản lý bài đăng</h4>
-        </div>
-        <div className="btn-toolbar mb-2 mb-md-0">
-          <ButtonGroup>
-            <Button variant="outline-primary" size="sm">
-              Share
-            </Button>
-            <Button variant="outline-primary" size="sm">
-              Export
-            </Button>
-          </ButtonGroup>
         </div>
       </div>
 

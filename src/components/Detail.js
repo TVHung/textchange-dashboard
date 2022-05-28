@@ -196,7 +196,7 @@ export default function Detail() {
             </div>
           </div>
         </div>
-        <div item xs={12} md={8} className="create-post-detail">
+        <div className="create-post-detail">
           <div className="mb-3">
             <h3>Thông tin sản phẩm đăng bán</h3>
           </div>

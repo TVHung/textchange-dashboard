@@ -4,24 +4,36 @@ import { Col, Row } from "@themesberg/react-bootstrap";
 import { ProfileCardWidget } from "../components/Widgets";
 import { GeneralInfoForm } from "../components/Forms";
 import axios from "axios";
-import { apiGetAccountProfile, apiUserProfile, headers } from "../constants";
+import { apiGetAccountProfile } from "../constants";
+import { getCookie } from "../utils/cookie";
+import Preloader from "../components/Preloader";
 
 export default () => {
   const [userProfile, setUserProfile] = useState({});
+  const [loaded, setLoaded] = useState(false);
+
   useEffect(() => {
     getAdminProfile();
-    return () => {};
+    setLoaded(true);
+    return () => {
+      setLoaded(false);
+      setUserProfile({});
+    };
   }, []);
 
   const getAdminProfile = async (e) => {
     try {
       await axios
         .get(apiGetAccountProfile, {
-          headers: headers,
+          headers: {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${getCookie("access_token")}`,
+          },
         })
         .then((res) => {
           const userProfile = res.data.data;
           setUserProfile(userProfile);
+          setLoaded(false);
         });
     } catch (error) {
       return { statusCode: 500, body: error.toString() };
@@ -30,6 +42,7 @@ export default () => {
 
   return (
     <>
+      <Preloader show={loaded} />
       <Row>
         <Col xs={12}>
           <ProfileCardWidget userProfile={userProfile} />

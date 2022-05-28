@@ -26,9 +26,12 @@ import {
   apiSetAdminUser,
 } from "../constants";
 import { Modal } from "@themesberg/react-bootstrap";
+import { getCookie } from "../utils/cookie";
+import Preloader from "../components/Preloader";
 
 export default () => {
   const [users, setUsers] = useState([]);
+  const [loaded, setLoaded] = useState(false);
 
   const [showDefault, setShowDefault] = useState(false);
   const [mess, setMess] = useState({
@@ -45,22 +48,30 @@ export default () => {
 
   useEffect(() => {
     fetchUsers();
+    setLoaded(true);
     console.log("user manager");
     return () => {
       setUsers([]);
       setShowDefault(false);
       setData({});
       setMess({});
+      setLoaded(false);
     };
   }, []);
 
   const fetchUsers = async () => {
     console.log("user", headers);
     await axios
-      .get(apiGetUser, { headers: headers })
+      .get(apiGetUser, {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${getCookie("access_token")}`,
+        },
+      })
       .then((res) => {
         console.log(res);
         setUsers(res.data.data);
+        setLoaded(false);
       })
       .catch((error) => {
         console.error(error);
@@ -69,9 +80,15 @@ export default () => {
 
   const setBlockUser = async (user_id) => {
     await axios
-      .post(`${apiSetBlockUser}/${user_id}`, { headers: headers })
+      .post(`${apiSetBlockUser}/${user_id}`, {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${getCookie("access_token")}`,
+        },
+      })
       .then((res) => {
         console.log(res);
+        fetchUsers();
       })
       .catch((error) => {
         console.error(error);
@@ -80,9 +97,15 @@ export default () => {
 
   const setAdminUser = async (user_id) => {
     await axios
-      .post(`${apiSetAdminUser}/${user_id}`, { headers: headers })
+      .post(`${apiSetAdminUser}/${user_id}`, {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${getCookie("access_token")}`,
+        },
+      })
       .then((res) => {
         console.log(res);
+        fetchUsers();
       })
       .catch((error) => {
         console.error(error);
@@ -90,14 +113,20 @@ export default () => {
   };
 
   const setDeleteUser = async (user_id) => {
-    // await axios
-    //   .post(`${apiSetAdminUser}/${user_id}`, { headers: headers })
-    //   .then((res) => {
-    //     console.log(res);
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //   });
+    await axios
+      .delete(`${apiGetUser}/${user_id}`, {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${getCookie("access_token")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        fetchUsers();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   const actionUser = async (user_id, action) => {
@@ -109,7 +138,7 @@ export default () => {
       case "delete":
         setMess({
           header: "Bạn có chắc chắn muốn xóa vĩnh viễn người dùng này không?",
-          body: "Người dùng sẽ không thể khôi phục.",
+          body: "Thông tin người dùng và tất cả thông tin các bài viết của họ sẽ bị xóa .",
         });
         break;
       case "addAdmin":
@@ -170,6 +199,7 @@ export default () => {
 
   return (
     <>
+      <Preloader show={loaded} />
       <Modal as={Modal.Dialog} centered show={showDefault} onHide={handleClose}>
         <Modal.Header>
           <Modal.Title className="h6">{mess.header}</Modal.Title>
@@ -203,16 +233,6 @@ export default () => {
             <Breadcrumb.Item active>Quản lý người dùng</Breadcrumb.Item>
           </Breadcrumb>
           <h4>Quản lý người dùng</h4>
-        </div>
-        <div className="btn-toolbar mb-2 mb-md-0">
-          <ButtonGroup>
-            <Button variant="outline-primary" size="sm">
-              Share
-            </Button>
-            <Button variant="outline-primary" size="sm">
-              Export
-            </Button>
-          </ButtonGroup>
         </div>
       </div>
 
