@@ -149,7 +149,7 @@ export default () => (
     />
 
     {/* pages */}
-    <RouteWithLoader
+    <RouteWithSidebar
       exact
       path={Routes.PostDetail.path}
       component={PostDetail}
@@ -188,7 +188,7 @@ export default () => (
     />
 
     {/* components */}
-    <RouteWithSidebar
+    {/* <RouteWithSidebar
       exact
       path={Routes.Accordions.path}
       component={Accordion}
@@ -215,7 +215,7 @@ export default () => (
     <RouteWithSidebar exact path={Routes.Tables.path} component={Tables} />
     <RouteWithSidebar exact path={Routes.Tabs.path} component={Tabs} />
     <RouteWithSidebar exact path={Routes.Tooltips.path} component={Tooltips} />
-    <RouteWithSidebar exact path={Routes.Toasts.path} component={Toasts} />
+    <RouteWithSidebar exact path={Routes.Toasts.path} component={Toasts} /> */}
 
     {/* documentation */}
     {/* <RouteWithSidebar

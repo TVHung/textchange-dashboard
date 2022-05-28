@@ -1,23 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCheck,
-  faCog,
-  faHome,
-  faSearch,
-} from "@fortawesome/free-solid-svg-icons";
-import {
-  Col,
-  Row,
-  Form,
-  Button,
-  ButtonGroup,
-  Breadcrumb,
-  InputGroup,
-  Dropdown,
-} from "@themesberg/react-bootstrap";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
+import { Button, ButtonGroup, Breadcrumb } from "@themesberg/react-bootstrap";
 
-import { UserTable } from "../components/Tables";
 import axios from "axios";
 import {
   apiGetUser,
@@ -25,27 +10,9 @@ import {
   headers,
   apiSetAdminUser,
 } from "../constants";
+import Detail from "../components/Detail";
 
 export default () => {
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    fetchUsers();
-    return () => {};
-  }, []);
-
-  const fetchUsers = async () => {
-    await axios
-      .get(apiGetUser, { headers: headers })
-      .then((res) => {
-        console.log(res);
-        setUsers(res.data.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
   const setBlockUser = async (user_id) => {
     await axios
       .post(`${apiSetBlockUser}/${user_id}`, { headers: headers })
@@ -55,51 +22,6 @@ export default () => {
       .catch((error) => {
         console.error(error);
       });
-  };
-
-  const setAdminUser = async (user_id) => {
-    await axios
-      .post(`${apiSetAdminUser}/${user_id}`, { headers: headers })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  const setDeleteUser = async (user_id) => {
-    // await axios
-    //   .post(`${apiSetAdminUser}/${user_id}`, { headers: headers })
-    //   .then((res) => {
-    //     console.log(res);
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //   });
-  };
-
-  const actionUser = async (user_id, action) => {
-    console.log(user_id, action);
-    switch (action) {
-      case "delete":
-        setDeleteUser(user_id);
-        break;
-      case "addAdmin":
-        setAdminUser(user_id);
-        break;
-      case "deleteAdmin":
-        setAdminUser(user_id);
-        break;
-      case "addBlock":
-        setBlockUser(user_id);
-        break;
-      case "deleteBlock":
-        setBlockUser(user_id);
-        break;
-      default:
-        break;
-    }
   };
 
   return (
@@ -113,9 +35,9 @@ export default () => {
             <Breadcrumb.Item>
               <FontAwesomeIcon icon={faHome} />
             </Breadcrumb.Item>
-            <Breadcrumb.Item active>Quản lý người dùng</Breadcrumb.Item>
+            <Breadcrumb.Item active>Chi tiết bài viết</Breadcrumb.Item>
           </Breadcrumb>
-          <h4>Quản lý người dùng</h4>
+          <h4>Chi tiết bài viết</h4>
         </div>
         <div className="btn-toolbar mb-2 mb-md-0">
           <ButtonGroup>
@@ -128,46 +50,7 @@ export default () => {
           </ButtonGroup>
         </div>
       </div>
-
-      <div className="table-settings mb-4">
-        <Row className="justify-content-between align-items-center">
-          <Col xs={8} md={6} lg={3} xl={4}>
-            <InputGroup>
-              <InputGroup.Text>
-                <FontAwesomeIcon icon={faSearch} />
-              </InputGroup.Text>
-              <Form.Control type="text" placeholder="Search" />
-            </InputGroup>
-          </Col>
-          <Col xs={4} md={2} xl={1} className="ps-md-0 text-end">
-            <Dropdown as={ButtonGroup}>
-              <Dropdown.Toggle
-                split
-                as={Button}
-                variant="link"
-                className="text-dark m-0 p-0"
-              >
-                <span className="icon icon-sm icon-gray">
-                  <FontAwesomeIcon icon={faCog} />
-                </span>
-              </Dropdown.Toggle>
-              <Dropdown.Menu className="dropdown-menu-xs dropdown-menu-right">
-                <Dropdown.Item className="fw-bold text-dark">
-                  Show
-                </Dropdown.Item>
-                <Dropdown.Item className="d-flex fw-bold">
-                  10{" "}
-                  <span className="icon icon-small ms-auto">
-                    <FontAwesomeIcon icon={faCheck} />
-                  </span>
-                </Dropdown.Item>
-                <Dropdown.Item className="fw-bold">20</Dropdown.Item>
-                <Dropdown.Item className="fw-bold">30</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </Col>
-        </Row>
-      </div>
+      <Detail />
     </>
   );
 };

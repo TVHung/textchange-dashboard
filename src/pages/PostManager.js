@@ -19,21 +19,37 @@ import {
   apiSetBlockPost,
   headers,
 } from "../constants";
-// import { Modal } from "react-bootstrap";
+import { Modal } from "@themesberg/react-bootstrap";
 
 export default () => {
   const [posts, setPosts] = useState([]);
-  const [show, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [showDefault, setShowDefault] = useState(false);
+  const [mess, setMess] = useState({
+    header: "",
+    body: "",
+  });
+  const [data, setData] = useState({
+    post_id: "",
+    action: "",
+  });
+
+  const handleClose = () => setShowDefault(false);
+  const handleShow = () => setShowDefault(true);
 
   useEffect(() => {
     fetchPosts();
-    return () => {};
+    console.log("post manager");
+    return () => {
+      setPosts([]);
+      setShowDefault(false);
+      setData({});
+      setMess({});
+    };
   }, []);
 
   const fetchPosts = async () => {
+    console.log("post", headers);
     await axios
       .get(apiPostManager, { headers: headers })
       .then((res) => {
@@ -67,16 +83,32 @@ export default () => {
     //   });
   };
 
-  const actionPost = async (post_id, action) => {
+  const actionPost = (post_id, action) => {
+    setData({
+      post_id: post_id,
+      action: action,
+    });
     switch (action) {
       case "delete":
-        setDeletePost(post_id);
+        setMess({
+          header: "Bạn có chắc chắn muốn xóa vĩnh viễn bài viết này không?",
+          body: "Bài viết sẽ không thể khôi phục.",
+        });
+        handleShow();
         break;
       case "addBlock":
-        setBlockPost(post_id);
+        setMess({
+          header: "Bạn có chắc chắn muốn khóa bài viết này không?",
+          body: "Bài viết sẽ bị khóa.",
+        });
+        handleShow();
         break;
       case "deleteBlock":
-        setBlockPost(post_id);
+        setMess({
+          header: "Bạn có chắc chắn muốn mở khóa bài viết này không?",
+          body: "Bài viết sẽ được mở khóa.",
+        });
+        handleShow();
         break;
       case "detailPost":
         window.location.href = `/volt-react-dashboard?#/post-manager/detail/${post_id}`;
@@ -85,25 +117,47 @@ export default () => {
         break;
     }
   };
+
+  const onConfirm = () => {
+    if (data.action && data.post_id)
+      switch (data.action) {
+        case "delete":
+          setDeletePost(data.post_id);
+          break;
+        case "addBlock":
+          setBlockPost(data.post_id);
+          break;
+        case "deleteBlock":
+          setBlockPost(data.post_id);
+          break;
+        default:
+          break;
+      }
+    handleClose();
+  };
   return (
     <>
-      {/* <Button variant="primary" onClick={handleShow}>
-        Launch demo modal
-      </Button>
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+      <Modal as={Modal.Dialog} centered show={showDefault} onHide={handleClose}>
+        <Modal.Header>
+          <Modal.Title className="h6">{mess.header}</Modal.Title>
+          <Button variant="close" aria-label="Close" onClick={handleClose} />
         </Modal.Header>
-        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+        <Modal.Body>
+          <p>{mess.body}</p>
+        </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
+          <Button variant="secondary" onClick={onConfirm}>
+            Xác nhận
           </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
+          <Button
+            variant="link"
+            className="text-gray ms-auto"
+            onClick={handleClose}
+          >
+            Hủy
           </Button>
         </Modal.Footer>
-      </Modal> */}
+      </Modal>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
         <div className="d-block mb-4 mb-md-0">
           <Breadcrumb

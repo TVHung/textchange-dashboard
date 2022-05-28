@@ -25,16 +25,37 @@ import {
   headers,
   apiSetAdminUser,
 } from "../constants";
+import { Modal } from "@themesberg/react-bootstrap";
 
 export default () => {
   const [users, setUsers] = useState([]);
 
+  const [showDefault, setShowDefault] = useState(false);
+  const [mess, setMess] = useState({
+    header: "",
+    body: "",
+  });
+  const [data, setData] = useState({
+    user_id: "",
+    action: "",
+  });
+
+  const handleClose = () => setShowDefault(false);
+  const handleShow = () => setShowDefault(true);
+
   useEffect(() => {
     fetchUsers();
-    return () => {};
+    console.log("user manager");
+    return () => {
+      setUsers([]);
+      setShowDefault(false);
+      setData({});
+      setMess({});
+    };
   }, []);
 
   const fetchUsers = async () => {
+    console.log("user", headers);
     await axios
       .get(apiGetUser, { headers: headers })
       .then((res) => {
@@ -80,30 +101,96 @@ export default () => {
   };
 
   const actionUser = async (user_id, action) => {
-    console.log(user_id, action);
+    setData({
+      user_id: user_id,
+      action: action,
+    });
     switch (action) {
       case "delete":
-        setDeleteUser(user_id);
+        setMess({
+          header: "Bạn có chắc chắn muốn xóa vĩnh viễn người dùng này không?",
+          body: "Người dùng sẽ không thể khôi phục.",
+        });
         break;
       case "addAdmin":
-        setAdminUser(user_id);
+        setMess({
+          header:
+            "Bạn có chắc chắn muốn thêm người dùng làm quản trị viên không?",
+          body: "Người dùng sẽ có quyền xem các thông tin khác.",
+        });
         break;
       case "deleteAdmin":
-        setAdminUser(user_id);
+        setMess({
+          header:
+            "Bạn có chắc chắn muốn xóa quyền quản trị của người dùng này không?",
+          body: "Người dùng sẽ mất các quyền.",
+        });
         break;
       case "addBlock":
-        setBlockUser(user_id);
+        setMess({
+          header: "Bạn có chắc chắn muốn khóa người dùng này không?",
+          body: "Người dùng sẽ không thể đăng nhập và quản lý các bài viết của họ.",
+        });
         break;
       case "deleteBlock":
-        setBlockUser(user_id);
+        setMess({
+          header: "Bạn có chắc chắn muốn xóa khóa người dùng này không?",
+          body: "Người dùng sẽ có thể đăng nhập và quản lý các bài viết của họ.",
+        });
         break;
       default:
         break;
     }
+    handleShow();
+  };
+
+  const onConfirm = () => {
+    if (data.action && data.user_id)
+      switch (data.action) {
+        case "delete":
+          setDeleteUser(data.user_id);
+          break;
+        case "addAdmin":
+          setAdminUser(data.user_id);
+          break;
+        case "deleteAdmin":
+          setAdminUser(data.user_id);
+          break;
+        case "addBlock":
+          setBlockUser(data.user_id);
+          break;
+        case "deleteBlock":
+          setBlockUser(data.user_id);
+          break;
+        default:
+          break;
+      }
+    handleClose();
   };
 
   return (
     <>
+      <Modal as={Modal.Dialog} centered show={showDefault} onHide={handleClose}>
+        <Modal.Header>
+          <Modal.Title className="h6">{mess.header}</Modal.Title>
+          <Button variant="close" aria-label="Close" onClick={handleClose} />
+        </Modal.Header>
+        <Modal.Body>
+          <p>{mess.body}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={onConfirm}>
+            Xác nhận
+          </Button>
+          <Button
+            variant="link"
+            className="text-gray ms-auto"
+            onClick={handleClose}
+          >
+            Hủy
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
         <div className="d-block mb-4 mb-md-0">
           <Breadcrumb

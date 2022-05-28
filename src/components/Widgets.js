@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleDown,
@@ -378,6 +378,12 @@ export const SalesValueWidget = (props) => {
   const { title, value, percentage } = props;
   const percentageIcon = percentage < 0 ? faAngleDown : faAngleUp;
   const percentageColor = percentage < 0 ? "text-danger" : "text-success";
+  const [type, setType] = useState("week");
+
+  const setTypeGraph = (e) => {
+    const { name } = e.target;
+    setType(name);
+  };
 
   return (
     <Card className="bg-secondary-alt shadow-sm">
@@ -395,16 +401,30 @@ export const SalesValueWidget = (props) => {
           </small>
         </div>
         <div className="d-flex ms-auto">
-          <Button variant="secondary" size="sm" className="me-2">
-            Month
-          </Button>
-          <Button variant="primary" size="sm" className="me-3">
+          <Button
+            name="week"
+            size="sm"
+            className={
+              type == "week" ? "me-3 btn-secondary" : "me-3 btn-primary"
+            }
+            onClick={(e) => setTypeGraph(e)}
+          >
             Week
+          </Button>
+          <Button
+            name="month"
+            size="sm"
+            className={
+              type == "month" ? "me-2 btn-secondary" : "me-2 btn-primary"
+            }
+            onClick={(e) => setTypeGraph(e)}
+          >
+            Month
           </Button>
         </div>
       </Card.Header>
       <Card.Body className="p-2">
-        <SalesValueChart />
+        <SalesValueChart type={type} />
       </Card.Body>
     </Card>
   );
@@ -414,6 +434,13 @@ export const SalesValueWidgetPhone = (props) => {
   const { title, value, percentage } = props;
   const percentageIcon = percentage < 0 ? faAngleDown : faAngleUp;
   const percentageColor = percentage < 0 ? "text-danger" : "text-success";
+
+  const [type, setType] = useState("week");
+
+  const setTypeGraph = (e) => {
+    const { name } = e.target;
+    setType(name);
+  };
 
   return (
     <Card className="bg-secondary-alt shadow-sm">
@@ -431,16 +458,30 @@ export const SalesValueWidgetPhone = (props) => {
           </small>
         </div>
         <div className="d-flex ms-auto">
-          <Button variant="secondary" size="sm" className="me-2">
-            Month
-          </Button>
-          <Button variant="primary" size="sm" className="me-3">
+          <Button
+            size="sm"
+            name="week"
+            className={
+              type == "week" ? "me-3 btn-secondary" : "me-3 btn-primary"
+            }
+            onClick={(e) => setTypeGraph(e)}
+          >
             Week
+          </Button>
+          <Button
+            size="sm"
+            name="month"
+            className={
+              type == "month" ? "me-2 btn-secondary" : "me-2 btn-primary"
+            }
+            onClick={(e) => setTypeGraph(e)}
+          >
+            Month
           </Button>
         </div>
       </Card.Header>
       <Card.Body className="p-2">
-        <SalesValueChartphone />
+        <SalesValueChartphone type={type} />
       </Card.Body>
     </Card>
   );
