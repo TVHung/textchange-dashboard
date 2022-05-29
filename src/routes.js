@@ -1,11 +1,11 @@
 export const Routes = {
   // pages
-  Presentation: { path: "/" },
-  DashboardOverview: { path: "/dashboard/overview" },
+  DashboardOverview: { path: "/" },
+  // DashboardOverview: { path: "/dashboard/overview" },
   PostManager: { path: "/post-manager" },
+  PostDetail: { path: "/post-manager/detail/:id" },
   UserManager: { path: "/user-manager" },
-  ChartManager: { path: "/chart-manager" },
-  Settings: { path: "/settings" },
+  Profile: { path: "/profile" },
   Signin: { path: "/auth/sign-in" },
   Signup: { path: "/auth/sign-up" },
   ForgotPassword: { path: "/auth/forgot-password" },

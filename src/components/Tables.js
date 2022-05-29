@@ -312,8 +312,8 @@ export const PostTable = ({ posts, actionPost }) => {
               </span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item onClick={() => actionPost(id, "detail")}>
-                <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
+              <Dropdown.Item onClick={() => actionPost(id, "detailPost")}>
+                <FontAwesomeIcon icon={faEye} className="me-2" /> Xem chi tiết
               </Dropdown.Item>
               {is_block == 1 ? (
                 <Dropdown.Item
@@ -334,7 +334,7 @@ export const PostTable = ({ posts, actionPost }) => {
                 className="text-danger"
                 onClick={() => actionPost(id, "delete")}
               >
-                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
+                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Xóa
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>

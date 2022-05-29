@@ -1,16 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleLeft,
   faEnvelope,
   faUnlockAlt,
 } from "@fortawesome/free-solid-svg-icons";
-import {
-  faFacebookF,
-  faGithub,
-  faGoogle,
-  faTwitter,
-} from "@fortawesome/free-brands-svg-icons";
+
 import {
   Col,
   Row,
@@ -38,6 +33,13 @@ export default () => {
     password: "",
     error: "",
   });
+
+  useEffect(() => {
+    return () => {
+      setUser();
+      setUserValidation();
+    };
+  }, []);
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -70,7 +72,13 @@ export default () => {
         if (data.access_token && data.user.is_admin === 1) {
           setCookie("access_token", data.access_token, 3600);
           setCookie("is_admin", data.user.is_admin, 3600);
-          window.location.href = "/volt-react-dashboard?#/dashboard/overview";
+          window.location.href = "/volt-react-dashboard?#/";
+        } else {
+          let error = "error";
+          setUserValidation((prevState) => ({
+            ...prevState,
+            [error]: "Đăng nhập không thành công",
+          }));
         }
       })
       .catch((e) => {
@@ -97,7 +105,7 @@ export default () => {
     <main>
       <section className="d-flex align-items-center my-5 mt-lg-6 mb-lg-5">
         <Container>
-          <p className="text-center">
+          {/* <p className="text-center">
             <Card.Link
               as={Link}
               to={Routes.DashboardOverview.path}
@@ -106,7 +114,7 @@ export default () => {
               <FontAwesomeIcon icon={faAngleLeft} className="me-2" /> Back to
               homepage
             </Card.Link>
-          </p>
+          </p> */}
           <Row className="justify-content-center form-bg-image">
             <Col
               xs={12}
@@ -188,18 +196,6 @@ export default () => {
                     Đăng nhập{" "}
                   </Button>
                 </Form>
-
-                <div className="mt-3 mb-4 text-center">
-                  <span className="fw-normal">Hoặc đăng nhập với</span>
-                </div>
-                <div className="d-flex justify-content-center my-4">
-                  <Button
-                    variant="outline-light"
-                    className="btn-icon-only btn-pill text-facebook me-2 w-100"
-                  >
-                    <FontAwesomeIcon icon={faGoogle} /> Tiếp tục với Google
-                  </Button>
-                </div>
                 {/* <div className="d-flex justify-content-center align-items-center mt-4">
                   <span className="fw-normal">
                     Not registered?

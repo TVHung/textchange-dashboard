@@ -3,14 +3,14 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import { Routes } from "../routes";
 
 // pages
-import Presentation from "./Presentation";
+// import Presentation from "./Presentation";
 import Upgrade from "./Upgrade";
 import DashboardOverview from "./dashboard/DashboardOverview";
 import Transactions from "./Transactions";
 import PostManager from "./PostManager";
+import PostDetail from "./PostDetail";
 import UserManager from "./UserManager";
-import ChartManager from "./ChartManager";
-import Settings from "./Settings";
+import Profile from "./Profile";
 import BootstrapTables from "./tables/BootstrapTables";
 import Signin from "./examples/Signin";
 import Signup from "./examples/Signup";
@@ -57,7 +57,10 @@ const RouteWithLoader = ({ component: Component, ...rest }) => {
 
   useEffect(() => {
     const timer = setTimeout(() => setLoaded(true), 1000);
-    return () => clearTimeout(timer);
+    return () => {
+      setLoaded(false);
+      clearTimeout(timer);
+    };
   }, []);
 
   return (
@@ -66,7 +69,8 @@ const RouteWithLoader = ({ component: Component, ...rest }) => {
       render={(props) => (
         <>
           {" "}
-          <Preloader show={loaded ? false : true} /> <Component {...props} />{" "}
+          <Preloader show={loaded ? false : true} />
+          <Component {...props} />{" "}
         </>
       )}
     />
@@ -78,7 +82,11 @@ const RouteWithSidebar = ({ component: Component, ...rest }) => {
 
   useEffect(() => {
     const timer = setTimeout(() => setLoaded(true), 1000);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      setLoaded(false);
+      setShowSettings();
+    };
   }, []);
 
   const localStorageIsSettingsVisible = () => {
@@ -118,11 +126,6 @@ const RouteWithSidebar = ({ component: Component, ...rest }) => {
 
 export default () => (
   <Switch>
-    <RouteWithLoader
-      exact
-      path={Routes.Presentation.path}
-      component={Presentation}
-    />
     <RouteWithLoader exact path={Routes.Signin.path} component={Signin} />
     <RouteWithLoader exact path={Routes.Signup.path} component={Signup} />
     <RouteWithLoader
@@ -150,21 +153,16 @@ export default () => (
     {/* pages */}
     <RouteWithSidebar
       exact
+      path={Routes.PostDetail.path}
+      component={PostDetail}
+    />
+    <RouteWithSidebar
+      exact
       path={Routes.DashboardOverview.path}
       component={DashboardOverview}
     />
     <RouteWithSidebar exact path={Routes.Upgrade.path} component={Upgrade} />
-    <RouteWithSidebar
-      exact
-      path={Routes.Transactions.path}
-      component={Transactions}
-    />
-    <RouteWithSidebar exact path={Routes.Settings.path} component={Settings} />
-    <RouteWithSidebar
-      exact
-      path={Routes.BootstrapTables.path}
-      component={BootstrapTables}
-    />
+
     <RouteWithSidebar
       exact
       path={Routes.PostManager.path}
@@ -175,12 +173,23 @@ export default () => (
       path={Routes.UserManager.path}
       component={UserManager}
     />
+    <RouteWithSidebar exact path={Routes.Profile.path} component={Profile} />
+
+    {/* <RouteWithLoader
+      exact
+      path={Routes.Presentation.path}
+      component={Presentation}
+    /> */}
+    {/* <RouteWithSidebar
+      exact
+      path={Routes.Transactions.path}
+      component={Transactions}
+    />
     <RouteWithSidebar
       exact
-      path={Routes.ChartManager.path}
-      component={ChartManager}
-    />
-
+      path={Routes.BootstrapTables.path}
+      component={BootstrapTables}
+    /> */}
     {/* components */}
     {/* <RouteWithSidebar
       exact

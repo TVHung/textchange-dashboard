@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleDown,
@@ -9,6 +9,7 @@ import {
   faFlagUsa,
   faFolderOpen,
   faGlobeEurope,
+  faPen,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faAngular,
@@ -31,27 +32,111 @@ import {
   SalesValueChart,
   SalesValueChartphone,
 } from "./Charts";
-
-import Profile1 from "../assets/img/avt.jpg";
-import ProfileCover from "../assets/img/profile-cover.jpg";
-
 import teamMembers from "../data/teamMembers";
+import { apiChangeAvatar, headerFiles, maxSizeImage } from "../constants";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { getCookie } from "../utils/cookie";
 
-export const ProfileCardWidget = () => {
+export const ProfileCardWidget = ({ userProfile }) => {
+  const [fileImage, setfileImage] = useState();
+  const [fileImageUrl, setfileImageUrl] = useState("");
+  const [validate, setValidate] = useState("");
+
+  const setUploadFile = (e) => {
+    let fileImage = e.target.files[0];
+    if (fileImage.size <= maxSizeImage) {
+      setfileImage(fileImage);
+      changeAvatar(fileImage);
+      setValidate("");
+    } else setValidate("Bạn chỉ được đăng ảnh kích thước tối đa 2mb");
+  };
+
+  useEffect(() => {
+    return () => {
+      setfileImage();
+      setfileImageUrl();
+      setValidate();
+    };
+  }, []);
+
+  const changeAvatar = async (fileImage) => {
+    const formData = new FormData();
+    formData.append("file", fileImage);
+    console.log("call api");
+    await axios
+      .post(apiChangeAvatar, formData, {
+        headers: headerFiles,
+      })
+      .then((res) => {
+        console.log("post image", res.data);
+        if (res.data.status == 1) {
+          setfileImageUrl(res.data.data);
+          toast.success(res.data.message);
+        } else {
+          toast.error("Cập nhật ảnh đại hiện không thành công");
+        }
+      })
+      .catch((error) => {
+        toast.error("Cập nhật ảnh đại hiện không thành công");
+        console.error(error);
+      });
+  };
+
   return (
     <Card border="light" className="text-center p-0 mb-4">
       <div
-        style={{ backgroundImage: `url(${ProfileCover})` }}
+        style={{
+          backgroundImage: `url(${userProfile && userProfile.avatar_url})`,
+        }}
         className="profile-cover rounded-top"
       />
       <Card.Body className="pb-0">
-        <Card.Img
-          src={Profile1}
-          alt="Neil Portrait"
-          className="user-avatar large-avatar rounded-circle mx-auto mt-n7 mb-4"
-        />
-        <Card.Title>Trương Hùng</Card.Title>
-        <Card.Text className="text-gray mb-2">Bắc Ninh</Card.Text>
+        <div className="position-relative">
+          <input
+            type="file"
+            className="custom-file-input"
+            id="avatar-upload-profile"
+            hidden
+            accept="image/*"
+            onChange={(e) => setUploadFile(e)}
+            style={{ zIndex: 100 }}
+          />
+          <Card.Img
+            src={
+              fileImageUrl
+                ? fileImageUrl
+                : userProfile && userProfile.avatar_url
+            }
+            alt="Neil Portrait"
+            className="user-avatar large-avatar rounded-circle mx-auto mt-n7 mb-4"
+            style={{ zIndex: 10 }}
+          />
+          <label
+            style={{
+              position: "absolute",
+              top: 70,
+              marginLeft: "auto",
+              marginRight: "auto",
+              left: 0,
+              right: 0,
+              textAlign: "center",
+              color: "#fff",
+            }}
+            htmlFor="avatar-upload-profile"
+          >
+            <FontAwesomeIcon icon={faPen} className="ms-2 fa-2x" />
+          </label>
+        </div>
+        {validate != "" && (
+          <Card.Text style={{ color: "red", marginBottom: 0 }}>
+            {validate}
+          </Card.Text>
+        )}
+        <Card.Title>{userProfile && userProfile.name}</Card.Title>
+        <Card.Text className="text-gray mb-2">
+          {userProfile && userProfile.address}
+        </Card.Text>
       </Card.Body>
     </Card>
   );
@@ -377,6 +462,12 @@ export const SalesValueWidget = (props) => {
   const { title, value, percentage } = props;
   const percentageIcon = percentage < 0 ? faAngleDown : faAngleUp;
   const percentageColor = percentage < 0 ? "text-danger" : "text-success";
+  const [type, setType] = useState("week");
+
+  const setTypeGraph = (e) => {
+    const { name } = e.target;
+    setType(name);
+  };
 
   return (
     <Card className="bg-secondary-alt shadow-sm">
@@ -394,16 +485,30 @@ export const SalesValueWidget = (props) => {
           </small>
         </div>
         <div className="d-flex ms-auto">
-          <Button variant="secondary" size="sm" className="me-2">
-            Month
-          </Button>
-          <Button variant="primary" size="sm" className="me-3">
+          <Button
+            name="week"
+            size="sm"
+            className={
+              type == "week" ? "me-3 btn-secondary" : "me-3 btn-primary"
+            }
+            onClick={(e) => setTypeGraph(e)}
+          >
             Week
+          </Button>
+          <Button
+            name="month"
+            size="sm"
+            className={
+              type == "month" ? "me-2 btn-secondary" : "me-2 btn-primary"
+            }
+            onClick={(e) => setTypeGraph(e)}
+          >
+            Month
           </Button>
         </div>
       </Card.Header>
       <Card.Body className="p-2">
-        <SalesValueChart />
+        <SalesValueChart type={type} />
       </Card.Body>
     </Card>
   );
@@ -413,6 +518,13 @@ export const SalesValueWidgetPhone = (props) => {
   const { title, value, percentage } = props;
   const percentageIcon = percentage < 0 ? faAngleDown : faAngleUp;
   const percentageColor = percentage < 0 ? "text-danger" : "text-success";
+
+  const [type, setType] = useState("week");
+
+  const setTypeGraph = (e) => {
+    const { name } = e.target;
+    setType(name);
+  };
 
   return (
     <Card className="bg-secondary-alt shadow-sm">
@@ -430,16 +542,30 @@ export const SalesValueWidgetPhone = (props) => {
           </small>
         </div>
         <div className="d-flex ms-auto">
-          <Button variant="secondary" size="sm" className="me-2">
-            Month
-          </Button>
-          <Button variant="primary" size="sm" className="me-3">
+          <Button
+            size="sm"
+            name="week"
+            className={
+              type == "week" ? "me-3 btn-secondary" : "me-3 btn-primary"
+            }
+            onClick={(e) => setTypeGraph(e)}
+          >
             Week
+          </Button>
+          <Button
+            size="sm"
+            name="month"
+            className={
+              type == "month" ? "me-2 btn-secondary" : "me-2 btn-primary"
+            }
+            onClick={(e) => setTypeGraph(e)}
+          >
+            Month
           </Button>
         </div>
       </Card.Header>
       <Card.Body className="p-2">
-        <SalesValueChartphone />
+        <SalesValueChartphone type={type} />
       </Card.Body>
     </Card>
   );

@@ -19,22 +19,110 @@ import {
 
 import { UserTable } from "../components/Tables";
 import axios from "axios";
-import { apiGetUser, headers } from "../constants";
+import {
+  apiGetUser,
+  apiSetBlockUser,
+  headers,
+  apiSetAdminUser,
+} from "../constants";
+import { Modal } from "@themesberg/react-bootstrap";
+import { getCookie } from "../utils/cookie";
+import Preloader from "../components/Preloader";
 
 export default () => {
   const [users, setUsers] = useState([]);
+  const [loaded, setLoaded] = useState(false);
+
+  const [showDefault, setShowDefault] = useState(false);
+  const [mess, setMess] = useState({
+    header: "",
+    body: "",
+  });
+  const [data, setData] = useState({
+    user_id: "",
+    action: "",
+  });
+
+  const handleClose = () => setShowDefault(false);
+  const handleShow = () => setShowDefault(true);
 
   useEffect(() => {
     fetchUsers();
-    return () => {};
+    setLoaded(true);
+    console.log("user manager");
+    return () => {
+      setUsers([]);
+      setShowDefault(false);
+      setData({});
+      setMess({});
+      setLoaded(false);
+    };
   }, []);
 
   const fetchUsers = async () => {
+    console.log("user", headers);
     await axios
-      .get(apiGetUser, { headers: headers })
+      .get(apiGetUser, {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${getCookie("access_token")}`,
+        },
+      })
       .then((res) => {
         console.log(res);
         setUsers(res.data.data);
+        setLoaded(false);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const setBlockUser = async (user_id) => {
+    await axios
+      .post(`${apiSetBlockUser}/${user_id}`, {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${getCookie("access_token")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        fetchUsers();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const setAdminUser = async (user_id) => {
+    await axios
+      .post(`${apiSetAdminUser}/${user_id}`, {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${getCookie("access_token")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        fetchUsers();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const setDeleteUser = async (user_id) => {
+    await axios
+      .delete(`${apiGetUser}/${user_id}`, {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${getCookie("access_token")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        fetchUsers();
       })
       .catch((error) => {
         console.error(error);
@@ -42,29 +130,97 @@ export default () => {
   };
 
   const actionUser = async (user_id, action) => {
+    setData({
+      user_id: user_id,
+      action: action,
+    });
     switch (action) {
       case "delete":
-        console.log("delete");
+        setMess({
+          header: "Bạn có chắc chắn muốn xóa vĩnh viễn người dùng này không?",
+          body: "Thông tin người dùng và tất cả thông tin các bài viết của họ sẽ bị xóa .",
+        });
         break;
       case "addAdmin":
-        console.log("addAdmin");
+        setMess({
+          header:
+            "Bạn có chắc chắn muốn thêm người dùng làm quản trị viên không?",
+          body: "Người dùng sẽ có quyền xem các thông tin khác.",
+        });
         break;
       case "deleteAdmin":
-        console.log("deleteAdmin");
+        setMess({
+          header:
+            "Bạn có chắc chắn muốn xóa quyền quản trị của người dùng này không?",
+          body: "Người dùng sẽ mất các quyền.",
+        });
         break;
       case "addBlock":
-        console.log("addBlock");
+        setMess({
+          header: "Bạn có chắc chắn muốn khóa người dùng này không?",
+          body: "Người dùng sẽ không thể đăng nhập và quản lý các bài viết của họ.",
+        });
         break;
       case "deleteBlock":
-        console.log("deleteBlock");
+        setMess({
+          header: "Bạn có chắc chắn muốn xóa khóa người dùng này không?",
+          body: "Người dùng sẽ có thể đăng nhập và quản lý các bài viết của họ.",
+        });
         break;
       default:
         break;
     }
+    handleShow();
+  };
+
+  const onConfirm = () => {
+    if (data.action && data.user_id)
+      switch (data.action) {
+        case "delete":
+          setDeleteUser(data.user_id);
+          break;
+        case "addAdmin":
+          setAdminUser(data.user_id);
+          break;
+        case "deleteAdmin":
+          setAdminUser(data.user_id);
+          break;
+        case "addBlock":
+          setBlockUser(data.user_id);
+          break;
+        case "deleteBlock":
+          setBlockUser(data.user_id);
+          break;
+        default:
+          break;
+      }
+    handleClose();
   };
 
   return (
     <>
+      <Preloader show={loaded} />
+      <Modal as={Modal.Dialog} centered show={showDefault} onHide={handleClose}>
+        <Modal.Header>
+          <Modal.Title className="h6">{mess.header}</Modal.Title>
+          <Button variant="close" aria-label="Close" onClick={handleClose} />
+        </Modal.Header>
+        <Modal.Body>
+          <p>{mess.body}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={onConfirm}>
+            Xác nhận
+          </Button>
+          <Button
+            variant="link"
+            className="text-gray ms-auto"
+            onClick={handleClose}
+          >
+            Hủy
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
         <div className="d-block mb-4 mb-md-0">
           <Breadcrumb
@@ -77,16 +233,6 @@ export default () => {
             <Breadcrumb.Item active>Quản lý người dùng</Breadcrumb.Item>
           </Breadcrumb>
           <h4>Quản lý người dùng</h4>
-        </div>
-        <div className="btn-toolbar mb-2 mb-md-0">
-          <ButtonGroup>
-            <Button variant="outline-primary" size="sm">
-              Share
-            </Button>
-            <Button variant="outline-primary" size="sm">
-              Export
-            </Button>
-          </ButtonGroup>
         </div>
       </div>
 

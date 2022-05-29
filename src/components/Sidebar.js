@@ -9,7 +9,6 @@ import {
   faTimes,
   faUser,
   faPager,
-  faChartBar,
   faUserShield,
   faFileAlt,
 } from "@fortawesome/free-solid-svg-icons";
@@ -174,11 +173,11 @@ export default (props = {}) => {
               </Nav.Link>
             </div>
             <Nav className="flex-column pt-3 pt-md-0">
-              <NavItem
+              {/* <NavItem
                 title="Texchange Manager"
                 link={Routes.Presentation.path}
                 image={ReactHero}
-              />
+              /> */}
 
               <NavItem
                 title="Overview"
@@ -196,14 +195,9 @@ export default (props = {}) => {
                 link={Routes.PostManager.path}
               />
               <NavItem
-                title="Biểu đồ phân tích"
-                icon={faChartBar}
-                link={Routes.ChartManager.path}
-              />
-              <NavItem
                 title="Thông tin quản trị viên"
                 icon={faUserShield}
-                link={Routes.Settings.path}
+                link={Routes.Profile.path}
               />
 
               <CollapsableNavItem

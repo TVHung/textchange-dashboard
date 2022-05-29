@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCashRegister,
@@ -30,10 +30,25 @@ import {
 } from "../../components/Widgets";
 import { PageVisitsTable } from "../../components/Tables";
 import { trafficShares, totalOrders } from "../../data/charts";
+import Preloader from "../../components/Preloader";
 
 export default () => {
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    setLoaded(true);
+    setTimeout(() => {
+      setLoaded(false);
+    }, 1000);
+
+    return () => {
+      setLoaded(false);
+    };
+  }, []);
+
   return (
     <>
+      <Preloader show={loaded} />
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4"></div>
 
       <Row className="justify-content-md-center">
