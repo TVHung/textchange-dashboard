@@ -73,16 +73,22 @@ export default () => {
 
   const setBlockPost = async (post_id) => {
     await axios
-      .post(`${apiSetBlockPost}/${post_id}`, {
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${getCookie("access_token")}`,
-        },
-      })
+      .post(
+        `${apiSetBlockPost}/${post_id}`,
+        {},
+        {
+          headers: {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${getCookie("access_token")}`,
+          },
+        }
+      )
       .then((res) => {
         console.log(res);
-        toast.success(res.data.message);
-        fetchPosts();
+        if (res.data.status == 1) {
+          toast.success(res.data.message);
+          fetchPosts();
+        } else toast.error(res.data.message);
       })
       .catch((error) => {
         console.error(error);
@@ -100,8 +106,10 @@ export default () => {
       })
       .then((res) => {
         console.log(res);
-        fetchPosts();
-        toast.success(res.data.message);
+        if (res.data.status == 1) {
+          fetchPosts();
+          toast.success(res.data.message);
+        } else toast.error(res.data.message);
       })
       .catch((error) => {
         console.error(error);

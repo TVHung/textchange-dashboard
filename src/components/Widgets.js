@@ -38,7 +38,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { getCookie } from "../utils/cookie";
 
-export const ProfileCardWidget = ({ userProfile }) => {
+export const ProfileCardWidget = ({ userProfile, setLoaded }) => {
   const [fileImage, setfileImage] = useState();
   const [fileImageUrl, setfileImageUrl] = useState("");
   const [validate, setValidate] = useState("");
@@ -46,6 +46,7 @@ export const ProfileCardWidget = ({ userProfile }) => {
   const setUploadFile = (e) => {
     let fileImage = e.target.files[0];
     if (fileImage.size <= maxSizeImage) {
+      setLoaded(true);
       setfileImage(fileImage);
       changeAvatar(fileImage);
       setValidate("");
@@ -76,8 +77,10 @@ export const ProfileCardWidget = ({ userProfile }) => {
         } else {
           toast.error("Cập nhật ảnh đại hiện không thành công");
         }
+        setLoaded(false);
       })
       .catch((error) => {
+        setLoaded(false);
         toast.error("Cập nhật ảnh đại hiện không thành công");
         console.error(error);
       });

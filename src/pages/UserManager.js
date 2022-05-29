@@ -28,6 +28,7 @@ import {
 import { Modal } from "@themesberg/react-bootstrap";
 import { getCookie } from "../utils/cookie";
 import Preloader from "../components/Preloader";
+import { toast } from "react-toastify";
 
 export default () => {
   const [users, setUsers] = useState([]);
@@ -80,15 +81,19 @@ export default () => {
 
   const setBlockUser = async (user_id) => {
     await axios
-      .post(`${apiSetBlockUser}/${user_id}`, {
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${getCookie("access_token")}`,
-        },
-      })
+      .post(
+        `${apiSetBlockUser}/${user_id}`,
+        {},
+        {
+          headers: headers,
+        }
+      )
       .then((res) => {
         console.log(res);
-        fetchUsers();
+        if (res.data.status == 1) {
+          toast.success(res.data.mess);
+          fetchUsers();
+        } else toast.error(res.data.message);
       })
       .catch((error) => {
         console.error(error);
@@ -97,15 +102,19 @@ export default () => {
 
   const setAdminUser = async (user_id) => {
     await axios
-      .post(`${apiSetAdminUser}/${user_id}`, {
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${getCookie("access_token")}`,
-        },
-      })
+      .post(
+        `${apiSetAdminUser}/${user_id}`,
+        {},
+        {
+          headers: headers,
+        }
+      )
       .then((res) => {
         console.log(res);
-        fetchUsers();
+        if (res.data.status == 1) {
+          toast.success(res.data.mess);
+          fetchUsers();
+        } else toast.error(res.data.message);
       })
       .catch((error) => {
         console.error(error);
@@ -122,7 +131,10 @@ export default () => {
       })
       .then((res) => {
         console.log(res);
-        fetchUsers();
+        if (res.data.status == 1) {
+          toast.success(res.data.mess);
+          fetchUsers();
+        } else toast.error(res.data.message);
       })
       .catch((error) => {
         console.error(error);

@@ -175,12 +175,11 @@ export default (props = {}) => {
             <Nav className="flex-column pt-3 pt-md-0">
               {/* <NavItem
                 title="Texchange Manager"
-                link={Routes.Presentation.path}
+                link={Routes.Home.path}
                 image={ReactHero}
               /> */}
-
               <NavItem
-                title="Overview"
+                title="Tổng quan"
                 link={Routes.DashboardOverview.path}
                 icon={faChartPie}
               />
@@ -200,7 +199,7 @@ export default (props = {}) => {
                 link={Routes.Profile.path}
               />
 
-              <CollapsableNavItem
+              {/* <CollapsableNavItem
                 eventKey="examples/"
                 title="Page Examples"
                 icon={faFileAlt}
@@ -221,7 +220,7 @@ export default (props = {}) => {
                   title="500 Server Error"
                   link={Routes.ServerError.path}
                 />
-              </CollapsableNavItem>
+              </CollapsableNavItem> */}
 
               <Dropdown.Divider className="my-3 border-indigo" />
 

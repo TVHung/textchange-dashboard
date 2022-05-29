@@ -1,6 +1,7 @@
 export const Routes = {
   // pages
   DashboardOverview: { path: "/" },
+  Home: { path: "/" },
   // DashboardOverview: { path: "/dashboard/overview" },
   PostManager: { path: "/post-manager" },
   PostDetail: { path: "/post-manager/detail/:id" },

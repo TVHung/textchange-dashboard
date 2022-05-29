@@ -70,10 +70,7 @@ export default () => {
       <Preloader show={loaded} />
       <Row>
         <Col xs={12}>
-          <ProfileCardWidget
-            userProfile={userProfile}
-            setFileAvatar={setFileAvatar}
-          />
+          <ProfileCardWidget userProfile={userProfile} setLoaded={setLoaded} />
         </Col>
         <Col xs={12}>
           <GeneralInfoForm userProfile={userProfile} />
