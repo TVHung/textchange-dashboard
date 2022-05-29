@@ -14,6 +14,7 @@ export const apiSetBlockUser = `${api}/auth/set-block-user`;
 export const apiSetAdminUser = `${api}/auth/set-admin-user`;
 //profile
 export const apiProfile = `${api}/profiles`;
+export const apiChangeAvatar = `${api}/change-avatar`;
 
 //api post
 export const apiPost = `${api}/posts`;

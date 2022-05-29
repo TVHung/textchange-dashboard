@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Col, Row, Card, Form, Button } from "@themesberg/react-bootstrap";
-import { apiUserProfile, headers } from "../constants";
+import { apiUserProfile, headers, sexData } from "../constants";
+import { toast } from "react-toastify";
 
 export const GeneralInfoForm = ({ userProfile }) => {
   const [profile, setProfile] = useState({
@@ -37,11 +38,18 @@ export const GeneralInfoForm = ({ userProfile }) => {
 
   const handleOnChangeProfile = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
-    setProfile((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    if (name == "sex") {
+      let val = Number(value);
+      setProfile((prevState) => ({
+        ...prevState,
+        [name]: val,
+      }));
+    } else {
+      setProfile((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmitProfile = (e) => {
@@ -59,11 +67,13 @@ export const GeneralInfoForm = ({ userProfile }) => {
         .then((res) => {
           console.log("data cap nhat", res.data);
           if (res.data.status == 1) {
+            toast.success(res.data.message);
           } else {
             handleValidate(res.data);
           }
         });
     } catch (error) {
+      toast.error("Cập nhật thất bại");
       return { statusCode: 500, body: error.toString() };
     }
   };
@@ -109,13 +119,15 @@ export const GeneralInfoForm = ({ userProfile }) => {
               <Form.Group id="gender">
                 <Form.Label>Gender</Form.Label>
                 <Form.Select
-                  defaultValue={userProfile && userProfile.sex}
+                  value={profile.sex || 0}
                   name="sex"
                   onChange={(e) => handleOnChangeProfile(e)}
                 >
-                  <option value={0}>Nam</option>
-                  <option value={1}>Nữ</option>
-                  <option value={2}>Khác</option>
+                  {sexData.map((data, index) => (
+                    <option value={data.id} key={index}>
+                      {data.value}
+                    </option>
+                  ))}
                 </Form.Select>
               </Form.Group>
             </Col>
@@ -182,11 +194,7 @@ export const GeneralInfoForm = ({ userProfile }) => {
             </Col>
           </Row>
           <div className="mt-3">
-            <Button
-              variant="primary"
-              type="submit"
-              onClick={(e) => handleSubmitProfile(e)}
-            >
+            <Button variant="primary" onClick={(e) => handleSubmitProfile(e)}>
               Lưu
             </Button>
           </div>

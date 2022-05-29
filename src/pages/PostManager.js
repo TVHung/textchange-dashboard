@@ -22,6 +22,7 @@ import {
 import { Modal } from "@themesberg/react-bootstrap";
 import { getCookie } from "../utils/cookie";
 import Preloader from "../components/Preloader";
+import { ToastContainer, toast } from "react-toastify";
 
 export default () => {
   const [posts, setPosts] = useState([]);
@@ -80,10 +81,12 @@ export default () => {
       })
       .then((res) => {
         console.log(res);
+        toast.success(res.data.message);
         fetchPosts();
       })
       .catch((error) => {
         console.error(error);
+        toast.error("Khóa bài viết không thành công");
       });
   };
 
@@ -98,9 +101,11 @@ export default () => {
       .then((res) => {
         console.log(res);
         fetchPosts();
+        toast.success(res.data.message);
       })
       .catch((error) => {
         console.error(error);
+        toast.error("Xóa bài viết không thành công");
       });
   };
 

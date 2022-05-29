@@ -173,7 +173,11 @@ export default (props = {}) => {
               </Nav.Link>
             </div>
             <Nav className="flex-column pt-3 pt-md-0">
-              <NavItem title="Texchange Manager" image={ReactHero} />
+              {/* <NavItem
+                title="Texchange Manager"
+                link={Routes.Presentation.path}
+                image={ReactHero}
+              /> */}
 
               <NavItem
                 title="Overview"
