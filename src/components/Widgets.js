@@ -318,7 +318,7 @@ export const TeamMembersWidget = () => {
           variant="secondary"
           size="sm"
           onClick={() =>
-            (window.location.href = `/volt-react-dashboard?#/user-manager`)
+            (window.location.href = `/texchange-dashboard?#/user-manager`)
           }
         >
           Quản lý người dùng
@@ -371,7 +371,7 @@ export const PostWidget = () => {
           variant="secondary"
           size="sm"
           onClick={() =>
-            (window.location.href = `/volt-react-dashboard?#/post-manager`)
+            (window.location.href = `/texchange-dashboard?#/post-manager`)
           }
         >
           Quản lý bài viết

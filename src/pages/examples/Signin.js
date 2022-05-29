@@ -72,7 +72,7 @@ export default () => {
         if (data.access_token && data.user.is_admin === 1) {
           setCookie("access_token", data.access_token, 3600);
           setCookie("is_admin", data.user.is_admin, 3600);
-          window.location.href = "/volt-react-dashboard?#/";
+          window.location.href = "/texchange-dashboard?#/";
         } else {
           let error = "error";
           setUserValidation((prevState) => ({
