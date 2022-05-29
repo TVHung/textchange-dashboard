@@ -11,7 +11,7 @@ import {
 import { useParams } from "react-router-dom";
 import "../scss/volt/components/_detail.scss";
 
-export default function Detail() {
+export default function Detail({ setLoaded }) {
   const [isTrade, setIsTrade] = useState(false);
   const [isFree, setIsFree] = useState(false);
   const [imageUrlEdit, setImageUrlEdit] = useState([]);
@@ -105,9 +105,11 @@ export default function Detail() {
           }
           setPostInforData(post);
           setImageUrlEdit(post.images);
+          setLoaded(false);
         })
       )
       .catch((errors) => {
+        setLoaded(false);
         console.error(errors);
       });
   };

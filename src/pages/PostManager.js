@@ -23,10 +23,13 @@ import { Modal } from "@themesberg/react-bootstrap";
 import { getCookie } from "../utils/cookie";
 import Preloader from "../components/Preloader";
 import { ToastContainer, toast } from "react-toastify";
+import { scrollToTop } from "../utils/common";
+import ScrollUp from "../components/ScrollUp";
 
 export default () => {
   const [posts, setPosts] = useState([]);
   const [loaded, setLoaded] = useState(false);
+  const [paginateData, setPaginateData] = useState({});
 
   const [showDefault, setShowDefault] = useState(false);
   const [mess, setMess] = useState({
@@ -53,9 +56,9 @@ export default () => {
     };
   }, []);
 
-  const fetchPosts = async () => {
+  const fetchPosts = async (pageNumber = 1) => {
     await axios
-      .get(apiPostManager, {
+      .get(`${apiPostManager}?page=${pageNumber}`, {
         headers: {
           "Content-type": "application/json",
           Authorization: `Bearer ${getCookie("access_token")}`,
@@ -64,7 +67,9 @@ export default () => {
       .then((res) => {
         console.log(res);
         setPosts(res.data.data);
+        setPaginateData(res.data.meta);
         setLoaded(false);
+        scrollToTop();
       })
       .catch((error) => {
         console.error(error);
@@ -73,16 +78,22 @@ export default () => {
 
   const setBlockPost = async (post_id) => {
     await axios
-      .post(`${apiSetBlockPost}/${post_id}`, {
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${getCookie("access_token")}`,
-        },
-      })
+      .post(
+        `${apiSetBlockPost}/${post_id}`,
+        {},
+        {
+          headers: {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${getCookie("access_token")}`,
+          },
+        }
+      )
       .then((res) => {
         console.log(res);
-        toast.success(res.data.message);
-        fetchPosts();
+        if (res.data.status == 1) {
+          toast.success(res.data.message);
+          fetchPosts();
+        } else toast.error(res.data.message);
       })
       .catch((error) => {
         console.error(error);
@@ -100,8 +111,10 @@ export default () => {
       })
       .then((res) => {
         console.log(res);
-        fetchPosts();
-        toast.success(res.data.message);
+        if (res.data.status == 1) {
+          fetchPosts();
+          toast.success(res.data.message);
+        } else toast.error(res.data.message);
       })
       .catch((error) => {
         console.error(error);
@@ -164,6 +177,7 @@ export default () => {
   return (
     <>
       <Preloader show={loaded} />
+      <ScrollUp />
       <Modal as={Modal.Dialog} centered show={showDefault} onHide={handleClose}>
         <Modal.Header>
           <Modal.Title className="h6">{mess.header}</Modal.Title>
@@ -213,7 +227,12 @@ export default () => {
         </Row>
       </div>
 
-      <PostTable posts={posts} actionPost={actionPost} />
+      <PostTable
+        posts={posts}
+        actionPost={actionPost}
+        fetchPosts={fetchPosts}
+        paginateData={paginateData}
+      />
     </>
   );
 };

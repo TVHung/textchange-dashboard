@@ -12,6 +12,7 @@ export const apiGetUser = `${api}/users`;
 export const apiChangePass = `${api}/auth/change-pass`;
 export const apiSetBlockUser = `${api}/auth/set-block-user`;
 export const apiSetAdminUser = `${api}/auth/set-admin-user`;
+export const apiGetCountUser = `${api}/auth/user-count`;
 //profile
 export const apiProfile = `${api}/profiles`;
 export const apiChangeAvatar = `${api}/change-avatar`;
