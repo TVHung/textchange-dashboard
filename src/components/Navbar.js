@@ -54,7 +54,7 @@ export default (props) => {
           .then((res) => {
             deleteCookie("access_token");
             setTimeout(() => {
-              window.location.href = `/volt-react-dashboard?#/auth/sign-in`;
+              window.location.href = `/texchange-dashboard?#/auth/sign-in`;
             }, 1000);
           });
       } catch (error) {
@@ -62,7 +62,7 @@ export default (props) => {
         return { statusCode: 500, body: error.toString() };
       }
     } else {
-      window.location.href = `/volt-react-dashboard?#/auth/sign-in`;
+      window.location.href = `/texchange-dashboard?#/auth/sign-in`;
     }
   };
 
@@ -90,7 +90,7 @@ export default (props) => {
         return { statusCode: 500, body: error.toString() };
       }
     } else {
-      window.location.href = `/volt-react-dashboard?#/auth/sign-in`;
+      window.location.href = `/texchange-dashboard?#/auth/sign-in`;
     }
   };
 
@@ -129,7 +129,7 @@ export default (props) => {
                 <Dropdown.Item
                   className="fw-bold"
                   onClick={() =>
-                    (window.location.href = "/volt-react-dashboard?#/profile")
+                    (window.location.href = "/texchange-dashboard?#/profile")
                   }
                 >
                   <FontAwesomeIcon icon={faUserCircle} className="me-2" /> My

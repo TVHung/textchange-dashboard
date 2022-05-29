@@ -150,7 +150,7 @@ export default () => {
         handleShow();
         break;
       case "detailPost":
-        window.location.href = `/volt-react-dashboard?#/post-manager/detail/${post_id}`;
+        window.location.href = `/texchange-dashboard?#/post-manager/detail/${post_id}`;
         break;
       default:
         break;
