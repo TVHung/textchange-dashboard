@@ -7,11 +7,11 @@ import axios from "axios";
 import { apiChangeAvatar, apiGetAccountProfile, headers } from "../constants";
 import { getCookie } from "../utils/cookie";
 import Preloader from "../components/Preloader";
+import ScrollUp from "../components/ScrollUp";
 
 export default () => {
   const [userProfile, setUserProfile] = useState({});
   const [loaded, setLoaded] = useState(false);
-  const [fileAvatar, setFileAvatar] = useState();
 
   useEffect(() => {
     getAdminProfile();
@@ -41,33 +41,10 @@ export default () => {
     }
   };
 
-  // useEffect(() => {
-  //   changeAvatar(fileAvatar);
-  //   return () => {};
-  // }, [fileAvatar]);
-
-  // const changeAvatar = async (fileImage) => {
-  //   const formData = new FormData();
-  //   formData.append("file", fileImage);
-  //   console.log(formData);
-  //   await axios
-  //     .post(apiChangeAvatar, formData, {
-  //       headers: {
-  //         "Content-Type": "multipart/form-data",
-  //         Authorization: `Bearer ${getCookie("access_token")}`,
-  //       },
-  //     })
-  //     .then((res) => {
-  //       console.log("post image", res.data.data);
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // };
-
   return (
     <>
       <Preloader show={loaded} />
+      <ScrollUp />
       <Row>
         <Col xs={12}>
           <ProfileCardWidget userProfile={userProfile} setLoaded={setLoaded} />

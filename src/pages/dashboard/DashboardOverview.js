@@ -27,10 +27,12 @@ import {
   SalesValueWidget,
   SalesValueWidgetPhone,
   AcquisitionWidget,
+  PostWidget,
 } from "../../components/Widgets";
 import { PageVisitsTable } from "../../components/Tables";
 import { trafficShares, totalOrders } from "../../data/charts";
 import Preloader from "../../components/Preloader";
+import ScrollUp from "../../components/ScrollUp";
 
 export default () => {
   const [loaded, setLoaded] = useState(false);
@@ -49,6 +51,7 @@ export default () => {
   return (
     <>
       <Preloader show={loaded} />
+      <ScrollUp />
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4"></div>
 
       <Row className="justify-content-md-center">
@@ -64,6 +67,14 @@ export default () => {
             title="Lượt truy cập trang"
             value="10,567"
             percentage={10.57}
+          />
+        </Col>
+        <Col xs={12} className="mb-4">
+          <BarChartWidget
+            title="Lượng giao dịch"
+            value={452}
+            percentage={18.2}
+            data={totalOrders}
           />
         </Col>
         <Col xs={12} sm={6} xl={4} className="mb-4">
@@ -99,15 +110,11 @@ export default () => {
             <Col xs={12} xl={8} className="mb-4">
               <Row>
                 <Col xs={12} className="mb-4">
-                  <PageVisitsTable />
+                  <PostWidget />
                 </Col>
 
-                <Col xs={12} lg={6} className="mb-4">
+                <Col xs={12} className="mb-4">
                   <TeamMembersWidget />
-                </Col>
-
-                <Col xs={12} lg={6} className="mb-4">
-                  <ProgressTrackWidget />
                 </Col>
               </Row>
             </Col>
@@ -115,18 +122,8 @@ export default () => {
             <Col xs={12} xl={4}>
               <Row>
                 <Col xs={12} className="mb-4">
-                  <BarChartWidget
-                    title="Total orders"
-                    value={452}
-                    percentage={18.2}
-                    data={totalOrders}
-                  />
-                </Col>
-
-                <Col xs={12} className="px-0 mb-4">
                   <RankingWidget />
                 </Col>
-
                 <Col xs={12} className="px-0">
                   <AcquisitionWidget />
                 </Col>

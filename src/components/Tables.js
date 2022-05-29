@@ -24,7 +24,6 @@ import {
   Table,
   Dropdown,
   ProgressBar,
-  Pagination,
   ButtonGroup,
 } from "@themesberg/react-bootstrap";
 import { Link } from "react-router-dom";
@@ -35,6 +34,7 @@ import transactions from "../data/transactions";
 import commands from "../data/commands";
 import avt from "../assets/img/avt.jpg";
 import { formatPrice } from "../utils/common";
+import Pagination from "react-js-pagination";
 
 const ValueChange = ({ value, suffix }) => {
   const valueIcon = value < 0 ? faAngleDown : faAngleUp;
@@ -256,13 +256,13 @@ export const RankingTable = () => {
   );
 };
 
-export const PostTable = ({ posts, actionPost }) => {
+export const PostTable = ({ posts, actionPost, fetchPosts, paginateData }) => {
   const totalPosts = posts.length;
 
   const TableRow = (props) => {
     const { id, images, name, address, category, price, is_sold, is_block } =
       props;
-    const statusVariant = is_block === 0 ? "success" : "warning";
+    const statusVariant = is_block === 1 ? "success" : "warning";
 
     return (
       <tr>
@@ -366,19 +366,22 @@ export const PostTable = ({ posts, actionPost }) => {
           </tbody>
         </Table>
         <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
-          <Nav>
-            <Pagination className="mb-2 mb-lg-0">
-              <Pagination.Prev>Previous</Pagination.Prev>
-              <Pagination.Item active>1</Pagination.Item>
-              <Pagination.Item>2</Pagination.Item>
-              <Pagination.Item>3</Pagination.Item>
-              <Pagination.Item>4</Pagination.Item>
-              <Pagination.Item>5</Pagination.Item>
-              <Pagination.Next>Next</Pagination.Next>
-            </Pagination>
-          </Nav>
+          <Pagination
+            activePage={paginateData?.current_page}
+            itemsCountPerPage={paginateData?.per_page}
+            totalItemsCount={paginateData?.total || 0}
+            onChange={(pageNumber) => {
+              fetchPosts(pageNumber);
+            }}
+            pageRangeDisplayed={5}
+            itemClass="page-item"
+            linkClass="page-link"
+            firstPageText="Trang đầu"
+            lastPageText="Trang cuối"
+          />
           <small className="fw-bold">
-            Showing <b>{totalPosts}</b> out of <b>25</b> entries
+            Showing <b>{totalPosts}</b> out of <b>{paginateData?.total}</b>{" "}
+            entries
           </small>
         </Card.Footer>
       </Card.Body>
@@ -386,12 +389,12 @@ export const PostTable = ({ posts, actionPost }) => {
   );
 };
 
-export const UserTable = ({ users, actionUser }) => {
+export const UserTable = ({ users, actionUser, fetchUsers, paginateData }) => {
   const totalUsers = users.length;
 
   const TableRow = (props) => {
     const { id, name, email, is_admin, is_block } = props;
-    const statusVariant = is_block === 0 ? "success" : "warning";
+    const statusVariant = is_block === 1 ? "success" : "warning";
     const statusAdmin = is_admin === 1 ? "success" : "warning";
 
     return (
@@ -496,19 +499,22 @@ export const UserTable = ({ users, actionUser }) => {
           </tbody>
         </Table>
         <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
-          <Nav>
-            <Pagination className="mb-2 mb-lg-0">
-              <Pagination.Prev>Previous</Pagination.Prev>
-              <Pagination.Item active>1</Pagination.Item>
-              <Pagination.Item>2</Pagination.Item>
-              <Pagination.Item>3</Pagination.Item>
-              <Pagination.Item>4</Pagination.Item>
-              <Pagination.Item>5</Pagination.Item>
-              <Pagination.Next>Next</Pagination.Next>
-            </Pagination>
-          </Nav>
+          <Pagination
+            activePage={paginateData?.current_page}
+            itemsCountPerPage={paginateData?.per_page}
+            totalItemsCount={paginateData?.total || 0}
+            onChange={(pageNumber) => {
+              fetchUsers(pageNumber);
+            }}
+            pageRangeDisplayed={5}
+            itemClass="page-item"
+            linkClass="page-link"
+            firstPageText="Trang đầu"
+            lastPageText="Trang cuối"
+          />
           <small className="fw-bold">
-            Showing <b>{totalUsers}</b> out of <b>25</b> entries
+            Showing <b>{totalUsers}</b> out of <b>{paginateData?.total}</b>{" "}
+            entries
           </small>
         </Card.Footer>
       </Card.Body>
@@ -607,17 +613,6 @@ export const TransactionsTable = () => {
           </tbody>
         </Table>
         <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
-          <Nav>
-            <Pagination className="mb-2 mb-lg-0">
-              <Pagination.Prev>Previous</Pagination.Prev>
-              <Pagination.Item active>1</Pagination.Item>
-              <Pagination.Item>2</Pagination.Item>
-              <Pagination.Item>3</Pagination.Item>
-              <Pagination.Item>4</Pagination.Item>
-              <Pagination.Item>5</Pagination.Item>
-              <Pagination.Next>Next</Pagination.Next>
-            </Pagination>
-          </Nav>
           <small className="fw-bold">
             Showing <b>{totalTransactions}</b> out of <b>25</b> entries
           </small>

@@ -11,8 +11,19 @@ import {
   apiSetAdminUser,
 } from "../constants";
 import Detail from "../components/Detail";
+import ScrollUp from "../components/ScrollUp";
+import Preloader from "../components/Preloader";
 
 export default () => {
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    setLoaded(true);
+    return () => {
+      setLoaded();
+    };
+  }, []);
+
   const setBlockUser = async (user_id) => {
     await axios
       .post(`${apiSetBlockUser}/${user_id}`, { headers: headers })
@@ -26,6 +37,8 @@ export default () => {
 
   return (
     <>
+      <Preloader show={loaded} />
+      <ScrollUp />
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
         <div className="d-block mb-4 mb-md-0">
           <Breadcrumb
@@ -42,15 +55,15 @@ export default () => {
         <div className="btn-toolbar mb-2 mb-md-0">
           <ButtonGroup>
             <Button variant="outline-primary" size="sm">
-              Share
+              Khóa bài viết
             </Button>
             <Button variant="outline-primary" size="sm">
-              Export
+              Xóa bài viết
             </Button>
           </ButtonGroup>
         </div>
       </div>
-      <Detail />
+      <Detail setLoaded={setLoaded} />
     </>
   );
 };

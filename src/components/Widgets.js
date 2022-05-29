@@ -37,6 +37,7 @@ import { apiChangeAvatar, headerFiles, maxSizeImage } from "../constants";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { getCookie } from "../utils/cookie";
+import { Routes } from "../routes";
 
 export const ProfileCardWidget = ({ userProfile, setLoaded }) => {
   const [fileImage, setfileImage] = useState();
@@ -312,9 +313,68 @@ export const TeamMembersWidget = () => {
   return (
     <Card border="light" className="shadow-sm">
       <Card.Header className="border-bottom border-light d-flex justify-content-between">
-        <h5 className="mb-0">Team members</h5>
-        <Button variant="secondary" size="sm">
-          See all
+        <h5 className="mb-0">Người dùng đăng kí mới</h5>
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() =>
+            (window.location.href = `/volt-react-dashboard?#/user-manager`)
+          }
+        >
+          Quản lý người dùng
+        </Button>
+      </Card.Header>
+      <Card.Body>
+        <ListGroup className="list-group-flush list my--3">
+          {teamMembers.map((tm) => (
+            <TeamMember key={`team-member-${tm.id}`} {...tm} />
+          ))}
+        </ListGroup>
+      </Card.Body>
+    </Card>
+  );
+};
+
+export const PostWidget = () => {
+  const TeamMember = (props) => {
+    const { name, statusKey, image, icon, btnText } = props;
+
+    return (
+      <ListGroup.Item className="px-0">
+        <Row className="align-items-center">
+          <Col className="col-auto">
+            <a href="#top" className="user-avatar">
+              <Image src={image} className="rounded-circle" />
+            </a>
+          </Col>
+          <Col className="ms--2">
+            <h4 className="h6 mb-0">
+              <a href="#!">{name}</a>
+            </h4>
+            <small>5 phút trước</small>
+          </Col>
+          <Col className="col-auto">
+            <Button variant="tertiary" size="sm">
+              <FontAwesomeIcon icon={icon} className="me-1" /> {btnText}
+            </Button>
+          </Col>
+        </Row>
+      </ListGroup.Item>
+    );
+  };
+
+  return (
+    <Card border="light" className="shadow-sm">
+      <Card.Header className="border-bottom border-light d-flex justify-content-between">
+        <h5 className="mb-0">Bài viết gần đây</h5>
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() =>
+            (window.location.href = `/volt-react-dashboard?#/post-manager`)
+          }
+        >
+          Quản lý bài viết
         </Button>
       </Card.Header>
       <Card.Body>

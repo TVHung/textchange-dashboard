@@ -6,3 +6,10 @@ export const formatPrice = (num) => {
     p < 0 || i < p ? `${m}.` : m
   );
 };
+
+export const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+};

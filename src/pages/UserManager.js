@@ -29,9 +29,12 @@ import { Modal } from "@themesberg/react-bootstrap";
 import { getCookie } from "../utils/cookie";
 import Preloader from "../components/Preloader";
 import { toast } from "react-toastify";
+import { scrollToTop } from "../utils/common";
+import ScrollUp from "../components/ScrollUp";
 
 export default () => {
   const [users, setUsers] = useState([]);
+  const [paginateData, setPaginateData] = useState({});
   const [loaded, setLoaded] = useState(false);
 
   const [showDefault, setShowDefault] = useState(false);
@@ -60,10 +63,9 @@ export default () => {
     };
   }, []);
 
-  const fetchUsers = async () => {
-    console.log("user", headers);
+  const fetchUsers = async (pageNumber = 1) => {
     await axios
-      .get(apiGetUser, {
+      .get(`${apiGetUser}?page=${pageNumber}`, {
         headers: {
           "Content-type": "application/json",
           Authorization: `Bearer ${getCookie("access_token")}`,
@@ -72,7 +74,9 @@ export default () => {
       .then((res) => {
         console.log(res);
         setUsers(res.data.data);
+        setPaginateData(res.data.meta);
         setLoaded(false);
+        scrollToTop();
       })
       .catch((error) => {
         console.error(error);
@@ -212,6 +216,7 @@ export default () => {
   return (
     <>
       <Preloader show={loaded} />
+      <ScrollUp />
       <Modal as={Modal.Dialog} centered show={showDefault} onHide={handleClose}>
         <Modal.Header>
           <Modal.Title className="h6">{mess.header}</Modal.Title>
@@ -288,7 +293,12 @@ export default () => {
         </Row>
       </div>
 
-      <UserTable users={users} actionUser={actionUser} />
+      <UserTable
+        users={users}
+        actionUser={actionUser}
+        fetchUsers={fetchUsers}
+        paginateData={paginateData}
+      />
     </>
   );
 };

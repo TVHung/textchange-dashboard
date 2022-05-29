@@ -23,10 +23,13 @@ import { Modal } from "@themesberg/react-bootstrap";
 import { getCookie } from "../utils/cookie";
 import Preloader from "../components/Preloader";
 import { ToastContainer, toast } from "react-toastify";
+import { scrollToTop } from "../utils/common";
+import ScrollUp from "../components/ScrollUp";
 
 export default () => {
   const [posts, setPosts] = useState([]);
   const [loaded, setLoaded] = useState(false);
+  const [paginateData, setPaginateData] = useState({});
 
   const [showDefault, setShowDefault] = useState(false);
   const [mess, setMess] = useState({
@@ -53,9 +56,9 @@ export default () => {
     };
   }, []);
 
-  const fetchPosts = async () => {
+  const fetchPosts = async (pageNumber = 1) => {
     await axios
-      .get(apiPostManager, {
+      .get(`${apiPostManager}?page=${pageNumber}`, {
         headers: {
           "Content-type": "application/json",
           Authorization: `Bearer ${getCookie("access_token")}`,
@@ -64,7 +67,9 @@ export default () => {
       .then((res) => {
         console.log(res);
         setPosts(res.data.data);
+        setPaginateData(res.data.meta);
         setLoaded(false);
+        scrollToTop();
       })
       .catch((error) => {
         console.error(error);
@@ -172,6 +177,7 @@ export default () => {
   return (
     <>
       <Preloader show={loaded} />
+      <ScrollUp />
       <Modal as={Modal.Dialog} centered show={showDefault} onHide={handleClose}>
         <Modal.Header>
           <Modal.Title className="h6">{mess.header}</Modal.Title>
@@ -221,7 +227,12 @@ export default () => {
         </Row>
       </div>
 
-      <PostTable posts={posts} actionPost={actionPost} />
+      <PostTable
+        posts={posts}
+        actionPost={actionPost}
+        fetchPosts={fetchPosts}
+        paginateData={paginateData}
+      />
     </>
   );
 };
