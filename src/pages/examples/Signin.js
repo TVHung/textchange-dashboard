@@ -1,24 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faAngleLeft,
-  faEnvelope,
-  faUnlockAlt,
-} from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faUnlockAlt } from "@fortawesome/free-solid-svg-icons";
 
 import {
   Col,
   Row,
   Form,
-  Card,
   Button,
-  FormCheck,
   Container,
   InputGroup,
 } from "@themesberg/react-bootstrap";
-import { Link } from "react-router-dom";
 
-import { Routes } from "../../routes";
 import { apiLogin } from "../../constants";
 import axios from "axios";
 import { setCookie } from "../../utils/cookie";
@@ -67,19 +59,16 @@ export default () => {
       .post(apiLogin, userLogin)
       .then((res) => {
         const data = res.data;
-        console.log(data);
-        handleValidate(data);
         if (data.access_token && data.user.is_admin === 1) {
           setCookie("access_token", data.access_token, 3600);
-          setCookie("is_admin", data.user.is_admin, 3600);
           window.location.href = "/texchange-dashboard?#/";
-        } else {
+        } else if (data?.status == -1) {
           let error = "error";
           setUserValidation((prevState) => ({
             ...prevState,
             [error]: "Đăng nhập không thành công",
           }));
-        }
+        } else handleValidate(data);
       })
       .catch((e) => {
         console.error(e);
