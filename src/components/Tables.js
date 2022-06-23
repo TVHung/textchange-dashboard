@@ -257,12 +257,12 @@ export const RankingTable = () => {
 };
 
 export const PostTable = ({ posts, actionPost, fetchPosts, paginateData }) => {
-  const totalPosts = posts.length;
+  const totalPosts = posts?.length;
 
   const TableRow = (props) => {
-    const { id, images, name, address, category, price, is_sold, is_block } =
-      props;
+    const { id, images, name, category, price, is_sold, is_block } = props;
     const statusVariant = is_block === 1 ? "success" : "warning";
+    const statusSold = is_sold === 1 ? "Đã bán" : "Chưa bán";
 
     return (
       <tr>
@@ -287,7 +287,7 @@ export const PostTable = ({ posts, actionPost, fetchPosts, paginateData }) => {
           <span className="fw-normal">{name}</span>
         </td>
         <td>
-          <span className="fw-normal">{address}</span>
+          <span className="fw-normal">{statusSold}</span>
         </td>
         <td>
           <span className="fw-normal">
@@ -353,14 +353,14 @@ export const PostTable = ({ posts, actionPost, fetchPosts, paginateData }) => {
               <th className="border-bottom">Hình ảnh</th>
               <th className="border-bottom">Loại sản phẩm</th>
               <th className="border-bottom">Tên</th>
-              <th className="border-bottom">Địa chỉ</th>
+              <th className="border-bottom">Tình trạng còn hàng</th>
               <th className="border-bottom">Giá</th>
               <th className="border-bottom">Khóa</th>
               <th className="border-bottom">Hành động</th>
             </tr>
           </thead>
           <tbody>
-            {posts.map((t, index) => (
+            {posts?.map((t, index) => (
               <TableRow key={`transaction-${index}`} {...t} />
             ))}
           </tbody>

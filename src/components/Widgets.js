@@ -33,11 +33,17 @@ import {
   SalesValueChartphone,
 } from "./Charts";
 import teamMembers from "../data/teamMembers";
-import { apiChangeAvatar, headerFiles, maxSizeImage } from "../constants";
+import {
+  apiChangeAvatar,
+  headerFiles,
+  maxSizeImage,
+  typePostInfor,
+} from "../constants";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { getCookie } from "../utils/cookie";
 import { Routes } from "../routes";
+import { handleCalculateTime } from "../utils/common";
 
 export const ProfileCardWidget = ({ userProfile, setLoaded }) => {
   const [fileImage, setfileImage] = useState();
@@ -65,7 +71,6 @@ export const ProfileCardWidget = ({ userProfile, setLoaded }) => {
   const changeAvatar = async (fileImage) => {
     const formData = new FormData();
     formData.append("file", fileImage);
-    console.log("call api");
     await axios
       .post(apiChangeAvatar, formData, {
         headers: headerFiles,
@@ -91,7 +96,8 @@ export const ProfileCardWidget = ({ userProfile, setLoaded }) => {
     <Card border="light" className="text-center p-0 mb-4">
       <div
         style={{
-          backgroundImage: `url(${userProfile && userProfile.avatar_url})`,
+          backgroundImage: `url(${userProfile && userProfile?.avatar_url})`,
+          backgroundPosition: "center",
         }}
         className="profile-cover rounded-top"
       />
@@ -110,7 +116,7 @@ export const ProfileCardWidget = ({ userProfile, setLoaded }) => {
             src={
               fileImageUrl
                 ? fileImageUrl
-                : userProfile && userProfile.avatar_url
+                : userProfile && userProfile?.avatar_url
             }
             alt="Neil Portrait"
             className="user-avatar large-avatar rounded-circle mx-auto mt-n7 mb-4"
@@ -137,9 +143,9 @@ export const ProfileCardWidget = ({ userProfile, setLoaded }) => {
             {validate}
           </Card.Text>
         )}
-        <Card.Title>{userProfile && userProfile.name}</Card.Title>
+        <Card.Title>{userProfile && userProfile?.name}</Card.Title>
         <Card.Text className="text-gray mb-2">
-          {userProfile && userProfile.address}
+          {userProfile && userProfile?.address}
         </Card.Text>
       </Card.Body>
     </Card>
@@ -273,37 +279,22 @@ export const BarChartWidget = (props) => {
   );
 };
 
-export const TeamMembersWidget = () => {
+export const TeamMembersWidget = ({ data }) => {
   const TeamMember = (props) => {
-    const { name, statusKey, image, icon, btnText } = props;
-    const status = {
-      online: { color: "success", label: "Online" },
-      inMeeting: { color: "warning", label: "In a meeting" },
-      offline: { color: "danger", label: "Offline" },
-    };
-
-    const statusColor = status[statusKey] ? status[statusKey].color : "danger",
-      statusLabel = status[statusKey] ? status[statusKey].label : "Offline";
-
+    const { name, avatar_url, created_at } = props;
     return (
       <ListGroup.Item className="px-0">
         <Row className="align-items-center">
           <Col className="col-auto">
             <a href="#top" className="user-avatar">
-              <Image src={image} className="rounded-circle" />
+              <Image src={avatar_url} className="rounded-circle" />
             </a>
           </Col>
           <Col className="ms--2">
             <h4 className="h6 mb-0">
               <a href="#!">{name}</a>
             </h4>
-            <span className={`text-${statusColor}`}>● </span>
-            <small>{statusLabel}</small>
-          </Col>
-          <Col className="col-auto">
-            <Button variant="tertiary" size="sm">
-              <FontAwesomeIcon icon={icon} className="me-1" /> {btnText}
-            </Button>
+            <small>{handleCalculateTime(created_at)}</small>
           </Col>
         </Row>
       </ListGroup.Item>
@@ -326,7 +317,7 @@ export const TeamMembersWidget = () => {
       </Card.Header>
       <Card.Body>
         <ListGroup className="list-group-flush list my--3">
-          {teamMembers.map((tm) => (
+          {data?.map((tm) => (
             <TeamMember key={`team-member-${tm.id}`} {...tm} />
           ))}
         </ListGroup>
@@ -335,27 +326,37 @@ export const TeamMembersWidget = () => {
   );
 };
 
-export const PostWidget = () => {
+export const PostWidget = ({ type, data }) => {
   const TeamMember = (props) => {
-    const { name, statusKey, image, icon, btnText } = props;
+    const { name, images, created_at, view, id } = props;
 
     return (
       <ListGroup.Item className="px-0">
         <Row className="align-items-center">
           <Col className="col-auto">
             <a href="#top" className="user-avatar">
-              <Image src={image} className="rounded-circle" />
+              <Image src={images[0]?.image_url} />
             </a>
           </Col>
           <Col className="ms--2">
             <h4 className="h6 mb-0">
               <a href="#!">{name}</a>
             </h4>
-            <small>5 phút trước</small>
+            {type === typePostInfor.mostView ? (
+              <small>{view} lượt xem</small>
+            ) : (
+              <small>{handleCalculateTime(created_at)}</small>
+            )}
           </Col>
           <Col className="col-auto">
-            <Button variant="tertiary" size="sm">
-              <FontAwesomeIcon icon={icon} className="me-1" /> {btnText}
+            <Button
+              variant="tertiary"
+              size="sm"
+              onClick={() =>
+                (window.location.href = `/texchange-dashboard?#/post-manager/detail/${id}`)
+              }
+            >
+              Xem chi tiết
             </Button>
           </Col>
         </Row>
@@ -366,7 +367,11 @@ export const PostWidget = () => {
   return (
     <Card border="light" className="shadow-sm">
       <Card.Header className="border-bottom border-light d-flex justify-content-between">
-        <h5 className="mb-0">Bài viết gần đây</h5>
+        {type === typePostInfor.mostView ? (
+          <h5 className="mb-0">Bài viết có lượt truy cập nhiều nhất</h5>
+        ) : (
+          <h5 className="mb-0">Bài viết gần đây</h5>
+        )}
         <Button
           variant="secondary"
           size="sm"
@@ -379,7 +384,7 @@ export const PostWidget = () => {
       </Card.Header>
       <Card.Body>
         <ListGroup className="list-group-flush list my--3">
-          {teamMembers.map((tm) => (
+          {data?.map((tm) => (
             <TeamMember key={`team-member-${tm.id}`} {...tm} />
           ))}
         </ListGroup>
@@ -522,7 +527,7 @@ export const RankingWidget = () => {
 };
 
 export const SalesValueWidget = (props) => {
-  const { title, value, percentage } = props;
+  const { title, value, percentage, data } = props;
   const percentageIcon = percentage < 0 ? faAngleDown : faAngleUp;
   const percentageColor = percentage < 0 ? "text-danger" : "text-success";
   const [type, setType] = useState("week");
@@ -571,7 +576,7 @@ export const SalesValueWidget = (props) => {
         </div>
       </Card.Header>
       <Card.Body className="p-2">
-        <SalesValueChart type={type} />
+        <SalesValueChart type={type} data={data} />
       </Card.Body>
     </Card>
   );
