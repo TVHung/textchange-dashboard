@@ -94,7 +94,7 @@ export const GeneralInfoForm = ({ userProfile }) => {
         <h5 className="mb-4">Thông tin người quản trị</h5>
         <Form>
           <Row>
-            <Col md={12} className="mb-3">
+            <Col md={6} className="mb-3">
               <Form.Group id="firstName">
                 <Form.Label>Tên</Form.Label>
                 <Form.Control
@@ -109,6 +109,21 @@ export const GeneralInfoForm = ({ userProfile }) => {
                       ? "form-control is-invalid"
                       : "form-control"
                   }
+                />
+                <span style={{ color: "red" }}>{validateProfile.name}</span>
+              </Form.Group>
+            </Col>
+            <Col md={6} className="mb-3">
+              <Form.Group id="firstName">
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  required
+                  type="email"
+                  defaultValue={"hungday@gmail.com"}
+                  placeholder="Email"
+                  name="email"
+                  className={"form-control"}
+                  readOnly
                 />
                 <span style={{ color: "red" }}>{validateProfile.name}</span>
               </Form.Group>

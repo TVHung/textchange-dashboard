@@ -4,12 +4,6 @@ import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { Button, ButtonGroup, Breadcrumb } from "@themesberg/react-bootstrap";
 
 import axios from "axios";
-import {
-  apiGetUser,
-  apiSetBlockUser,
-  headers,
-  apiSetAdminUser,
-} from "../constants";
 import Detail from "../components/Detail";
 import ScrollUp from "../components/ScrollUp";
 import Preloader from "../components/Preloader";
@@ -23,17 +17,6 @@ export default () => {
       setLoaded();
     };
   }, []);
-
-  const setBlockUser = async (user_id) => {
-    await axios
-      .post(`${apiSetBlockUser}/${user_id}`, { headers: headers })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
 
   return (
     <>

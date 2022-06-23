@@ -13,29 +13,33 @@ export const apiChangePass = `${api}/auth/change-pass`;
 export const apiSetBlockUser = `${api}/auth/set-block-user`;
 export const apiSetAdminUser = `${api}/auth/set-admin-user`;
 export const apiGetCountUser = `${api}/auth/user-count`;
+export const apiUserRecently = `${api}/auth/user-recently`;
 //profile
 export const apiProfile = `${api}/profiles`;
 export const apiChangeAvatar = `${api}/change-avatar`;
 
-//api post
-export const apiPost = `${api}/posts`;
-export const apiPostManager = `${api}/post-manager`;
-export const apiPostRecently = `${api}/posts-recently`;
-export const apiPostHasTrade = `${api}/posts-has-trade`;
-export const apiGetAllPost = `${api}/posts`;
-export const apiFetchPostDetail = `${api}/posts`;
-export const apiFetchPostDetailWithCheck = `${api}/get-post-edit`;
-export const apiFetchMyPosts = `${api}/my-posts`;
-export const apiFetchUserPosts = `${api}/user-posts`;
-export const apiFetchRecommendPosts = `${api}/recommend-posts`;
+//api product
+export const apiPost = `${api}/products`;
+export const apiPostManager = `${api}/product-manager`;
+export const apiPostRecently = `${api}/products-recently`;
+export const apiPostHasTrade = `${api}/products-has-trade`;
+export const apiGetAllPost = `${api}/products`;
+export const apiFetchPostDetail = `${api}/products`;
+export const apiFetchPostDetailWithCheck = `${api}/get-product-edit`;
+export const apiFetchMyPosts = `${api}/my-products`;
+export const apiFetchUserPosts = `${api}/user-products`;
+export const apiFetchRecommendPosts = `${api}/recommend-products`;
 export const apiWishList = `${api}/wish-list`;
-export const apiSetBlockPost = `${api}/set-block-post`;
+export const apiSetBlockPost = `${api}/set-block-product`;
+export const apiFetchMostView = `${api}/most-view`;
+export const apiRecently = `${api}/dashboard-recently-product`;
+export const apiViewStatic = `${api}/view-static`;
 
-//api post trade
-export const apiPostTrade = `${api}/post-trades`;
+//api product trade
+export const apiPostTrade = `${api}/product-trades`;
 
 //api image
-export const apiImages = `${api}/post-image`;
+export const apiImages = `${api}/product-image`;
 export const apiUpload = `${api}/upload`;
 export const apiUploadVideo = `${api}/upload-video`;
 
@@ -50,6 +54,11 @@ export const apiGetBrandByCategory = `${api}/get-by-category`;
 
 //search
 export const apiSearch = `${api}/search`;
+
+export const typePostInfor = {
+  mostView: "most-view",
+  recently: "recently",
+};
 
 export const headers = {
   "Content-type": "application/json",

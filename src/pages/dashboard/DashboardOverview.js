@@ -1,52 +1,74 @@
 import React, { useState, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCashRegister,
-  faChartLine,
-  faCloudUploadAlt,
-  faPlus,
-  faRocket,
-  faTasks,
-  faUserShield,
-} from "@fortawesome/free-solid-svg-icons";
-import {
-  Col,
-  Row,
-  Button,
-  Dropdown,
-  ButtonGroup,
-} from "@themesberg/react-bootstrap";
-
+import { faCashRegister, faChartLine } from "@fortawesome/free-solid-svg-icons";
+import { Col, Row } from "@themesberg/react-bootstrap";
 import {
   CounterWidget,
   CircleChartWidget,
   BarChartWidget,
   TeamMembersWidget,
-  ProgressTrackWidget,
-  RankingWidget,
   SalesValueWidget,
   SalesValueWidgetPhone,
   AcquisitionWidget,
   PostWidget,
 } from "../../components/Widgets";
-import { PageVisitsTable } from "../../components/Tables";
 import { trafficShares, totalOrders } from "../../data/charts";
 import Preloader from "../../components/Preloader";
 import ScrollUp from "../../components/ScrollUp";
+import {
+  apiFetchMostView,
+  apiRecently,
+  headers,
+  typePostInfor,
+  apiUserRecently,
+  apiViewStatic,
+} from "../../constants";
+import axios from "axios";
 
 export default () => {
   const [loaded, setLoaded] = useState(false);
+  const [productRecently, setProductRecently] = useState([]);
+  const [productMostView, setProductMostView] = useState([]);
+  const [userRecently, setUserRecently] = useState([]);
+  const [viewStatic, setViewStatic] = useState([]);
 
   useEffect(() => {
     setLoaded(true);
-    setTimeout(() => {
-      setLoaded(false);
-    }, 1000);
-
+    getAllDataDashboard();
     return () => {
       setLoaded(false);
+      setProductMostView([]);
+      setProductRecently([]);
+      setUserRecently([]);
+      setViewStatic([]);
     };
   }, []);
+
+  const getAllDataDashboard = async () => {
+    let apiMostView = `${apiFetchMostView}`;
+    let apiRecent = `${apiRecently}`;
+    let apiUserRecent = `${apiUserRecently}`;
+    let apiStaticView = `${apiViewStatic}`;
+    const requestPost = axios.get(apiMostView, { headers: headers });
+    const requestView = axios.get(apiRecent, { headers: headers });
+    const requestUser = axios.get(apiUserRecent, { headers: headers });
+    const requestStaticView = axios.get(apiStaticView, { headers: headers });
+
+    await axios
+      .all([requestPost, requestView, requestUser, requestStaticView])
+      .then(
+        axios.spread((...responses) => {
+          setProductMostView(responses[0].data.data);
+          setProductRecently(responses[1].data.data);
+          setUserRecently(responses[2].data.data);
+          setViewStatic(responses[3].data.data);
+          setLoaded(false);
+        })
+      )
+      .catch((errors) => {
+        console.error(errors);
+        setLoaded(false);
+      });
+  };
 
   return (
     <>
@@ -57,16 +79,18 @@ export default () => {
       <Row className="justify-content-md-center">
         <Col xs={12} className="mb-4 d-none d-sm-block">
           <SalesValueWidget
-            title="Lượt truy cập trang"
+            title="Lượt xem các sản phẩm"
             value="10,567"
             percentage={10.57}
+            data={viewStatic}
           />
         </Col>
         <Col xs={12} className="mb-4 d-sm-none">
           <SalesValueWidgetPhone
-            title="Lượt truy cập trang"
+            title="Lượt xem các sản phẩm"
             value="10,567"
             percentage={10.57}
+            data={viewStatic}
           />
         </Col>
         <Col xs={12} className="mb-4">
@@ -107,24 +131,30 @@ export default () => {
       <Row>
         <Col xs={12} xl={12} className="mb-4">
           <Row>
-            <Col xs={12} xl={8} className="mb-4">
+            <Col xs={12} xl={6} className="mb-4">
               <Row>
                 <Col xs={12} className="mb-4">
-                  <PostWidget />
+                  <PostWidget
+                    type={typePostInfor.recently}
+                    data={productRecently}
+                  />
                 </Col>
 
                 <Col xs={12} className="mb-4">
-                  <TeamMembersWidget />
+                  <TeamMembersWidget data={userRecently} />
                 </Col>
               </Row>
             </Col>
 
-            <Col xs={12} xl={4}>
+            <Col xs={12} xl={6}>
               <Row>
                 <Col xs={12} className="mb-4">
-                  <RankingWidget />
+                  <PostWidget
+                    type={typePostInfor.mostView}
+                    data={productMostView}
+                  />
                 </Col>
-                <Col xs={12} className="px-0">
+                <Col xs={12} className="mb-4">
                   <AcquisitionWidget />
                 </Col>
               </Row>

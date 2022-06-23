@@ -1,11 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Chartist from "react-chartist";
 import ChartistTooltip from "chartist-plugin-tooltips-updated";
 
-export const SalesValueChart = ({ type }) => {
+export const SalesValueChart = ({ type, data }) => {
+  const [xWeek, setXWeek] = useState([]);
+  const [yWeek, setYWeek] = useState([]);
+  useEffect(() => {
+    setXWeek(
+      data.map(function (obj) {
+        return obj.date;
+      })
+    );
+    setYWeek(
+      data.map(function (obj) {
+        return obj.views;
+      })
+    );
+    return () => {
+      setXWeek([]);
+      setYWeek([]);
+    };
+  }, [data]);
+
   const dataWeek = {
-    labels: ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật"],
-    series: [[1, 2, 2, 3, 3, 4, 3]],
+    labels: xWeek,
+    series: [yWeek],
   };
 
   const dataMonth = {
@@ -38,7 +57,7 @@ export const SalesValueChart = ({ type }) => {
       // On the y-axis start means left and end means right
       showGrid: true,
       showLabel: true,
-      labelInterpolationFnc: (value) => `$${value / 1}k`,
+      labelInterpolationFnc: (value) => `$${value / 1000}k`,
     },
   };
 

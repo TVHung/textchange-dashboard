@@ -113,6 +113,12 @@
             // }
         }
     }
+    input,
+    select,
+    textarea,
+    option {
+        color: #000 !important;
+    }
 }
 
 .validate-form-address {

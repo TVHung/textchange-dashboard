@@ -65,7 +65,7 @@ export default () => {
         },
       })
       .then((res) => {
-        console.log(res);
+        console.log("all post", res.data);
         setPosts(res.data.data);
         setPaginateData(res.data.meta);
         setLoaded(false);
