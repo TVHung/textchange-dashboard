@@ -189,7 +189,7 @@ export default (props = {}) => {
                 link={Routes.UserManager.path}
               />
               <NavItem
-                title="Quản lý bài đăng"
+                title="Quản lý sản phẩm"
                 icon={faPager}
                 link={Routes.PostManager.path}
               />

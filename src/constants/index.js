@@ -83,22 +83,23 @@ export const storageData = [
   { value: 256 },
   { value: 512 },
   { value: 1024 },
+  { value: 2048 },
 ];
 
 export const statusData = [
-  { id: 0, value: "Mới" },
-  { id: 1, value: "Cũ (90-99%)" },
-  { id: 2, value: "Cũ (<90%)" },
+  { id: 1, value: "Mới" },
+  { id: 2, value: "Cũ (90-99%)" },
+  { id: 3, value: "Cũ (<90%)" },
 ];
 export const sexData = [
-  { id: 0, value: "Nam" },
-  { id: 1, value: "Nữ" },
-  { id: 2, value: "Khác" },
+  { id: 1, value: "Nam" },
+  { id: 2, value: "Nữ" },
+  { id: 3, value: "Khác" },
 ];
 export const storageTypeData = [
-  { id: 0, value: "HDD", type: 0 },
-  { id: 1, value: "SSD", type: 1 },
-  { id: 2, value: "SSHD", type: 2 },
+  { id: 1, value: "HDD", type: 0 },
+  { id: 2, value: "SSD", type: 1 },
+  { id: 3, value: "SSHD", type: 2 },
 ];
 export const categoryData = [
   { id: 1, value: "Điện thoại, máy tính bảng" },
@@ -108,6 +109,14 @@ export const categoryData = [
 export const videoData = [
   { id: 1, value: "Có video" },
   { id: 0, value: "Không có video" },
+];
+export const blockStatus = [
+  { id: 1, value: "Khóa" },
+  { id: 0, value: "Không khóa" },
+];
+export const soldStatus = [
+  { id: 1, value: "Đã bán" },
+  { id: 0, value: "Chưa bán" },
 ];
 //filter
 export const priceStep = 200000;
@@ -235,11 +244,11 @@ export const marksRam = [
   },
 ];
 export const displaySizeData = [
-  { id: 0, value: "< 13 inch" },
-  { id: 1, value: "13 - 13.9 inch" },
-  { id: 2, value: "14 - 14.9 inch" },
-  { id: 3, value: "15 - 15.9 inch" },
-  { id: 4, value: "> 16 inch" },
+  { id: 1, value: "< 13 inch" },
+  { id: 2, value: "13 - 13.9 inch" },
+  { id: 3, value: "14 - 14.9 inch" },
+  { id: 4, value: "15 - 15.9 inch" },
+  { id: 5, value: "> 16 inch" },
 ];
 export const cardData = [
   { id: 1, value: "Có GPU" },
