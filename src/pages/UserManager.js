@@ -52,7 +52,6 @@ export default () => {
 
   useEffect(() => {
     fetchUsers();
-    setLoaded(true);
     console.log("user manager");
     return () => {
       setUsers([]);
@@ -64,6 +63,7 @@ export default () => {
   }, []);
 
   const fetchUsers = async (pageNumber = 1) => {
+    setLoaded(true);
     await axios
       .get(`${apiGetUser}?page=${pageNumber}`, {
         headers: {
@@ -176,13 +176,13 @@ export default () => {
       case "addBlock":
         setMess({
           header: "Bạn có chắc chắn muốn khóa người dùng này không?",
-          body: "Người dùng sẽ không thể đăng nhập và quản lý các bài viết của họ.",
+          body: "Người dùng sẽ không thể đăng nhập và quản lý các sản phẩm của họ.",
         });
         break;
       case "deleteBlock":
         setMess({
           header: "Bạn có chắc chắn muốn xóa khóa người dùng này không?",
-          body: "Người dùng sẽ có thể đăng nhập và quản lý các bài viết của họ.",
+          body: "Người dùng sẽ có thể đăng nhập và quản lý các sản phẩm của họ.",
         });
         break;
       default:

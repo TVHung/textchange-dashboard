@@ -260,9 +260,9 @@ export const PostTable = ({ posts, actionPost, fetchPosts, paginateData }) => {
   const totalPosts = posts?.length;
 
   const TableRow = (props) => {
-    const { id, images, name, category, price, is_sold, is_block } = props;
+    const { id, images, name, category, price, sold, is_block } = props;
     const statusVariant = is_block === 1 ? "success" : "warning";
-    const statusSold = is_sold === 1 ? "Đã bán" : "Chưa bán";
+    const statusSold = sold === 1 ? "Đã bán" : "Chưa bán";
 
     return (
       <tr>
@@ -353,7 +353,7 @@ export const PostTable = ({ posts, actionPost, fetchPosts, paginateData }) => {
               <th className="border-bottom">Hình ảnh</th>
               <th className="border-bottom">Loại sản phẩm</th>
               <th className="border-bottom">Tên</th>
-              <th className="border-bottom">Tình trạng còn hàng</th>
+              <th className="border-bottom">Tình trạng giao dịch</th>
               <th className="border-bottom">Giá</th>
               <th className="border-bottom">Khóa</th>
               <th className="border-bottom">Hành động</th>

@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
 import {
   Col,
   Row,
   Form,
   Button,
-  ButtonGroup,
   Breadcrumb,
-  InputGroup,
+  FormLabel,
 } from "@themesberg/react-bootstrap";
 import axios from "axios";
 
@@ -17,14 +16,18 @@ import {
   apiPost,
   apiPostManager,
   apiSetBlockPost,
-  headers,
+  blockStatus,
+  categoryData,
+  soldStatus,
 } from "../constants";
 import { Modal } from "@themesberg/react-bootstrap";
 import { getCookie } from "../utils/cookie";
 import Preloader from "../components/Preloader";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { scrollToTop } from "../utils/common";
 import ScrollUp from "../components/ScrollUp";
+
+var filter = [];
 
 export default () => {
   const [posts, setPosts] = useState([]);
@@ -46,8 +49,8 @@ export default () => {
 
   useEffect(() => {
     fetchPosts();
-    setLoaded(true);
     return () => {
+      filter = [];
       setPosts([]);
       setShowDefault(false);
       setData({});
@@ -57,8 +60,17 @@ export default () => {
   }, []);
 
   const fetchPosts = async (pageNumber = 1) => {
+    setLoaded(true);
+    //get option from array object
+    let option = "";
+    for (let index = 0; index < filter.length; index++) {
+      option += `${filter[index].name}=${filter[index].value}`;
+      if (index < filter.length - 1) option += "&";
+    }
+    console.log(option);
+    let apiCall = `${apiPostManager}?page=${pageNumber}&${option}`;
     await axios
-      .get(`${apiPostManager}?page=${pageNumber}`, {
+      .get(apiCall, {
         headers: {
           "Content-type": "application/json",
           Authorization: `Bearer ${getCookie("access_token")}`,
@@ -174,6 +186,53 @@ export default () => {
       }
     handleClose();
   };
+
+  const onChangeFilter = (e) => {
+    const { name, value } = e.target;
+    //check exist object
+    const isFound = filter.some((element) => {
+      return element.name === name ? true : false;
+    });
+    //filter if name exist
+    if (isFound) {
+      filter = filter.filter((item) => item.name !== name);
+    }
+    switch (name) {
+      case "category_id":
+        if (parseInt(value) > 0) {
+          filter.push({
+            name: name,
+            value: value,
+          });
+        }
+        break;
+      case "is_block":
+        if (parseInt(value) >= 0) {
+          filter.push({
+            name: name,
+            value: value,
+          });
+        }
+        break;
+      case "sold":
+        if (parseInt(value) >= 0) {
+          filter.push({
+            name: name,
+            value: value,
+          });
+        }
+        break;
+      default:
+        break;
+    }
+    console.log(filter, isFound);
+  };
+
+  const onSubmitFilter = (e) => {
+    e.preventDefault();
+    fetchPosts();
+  };
+
   return (
     <>
       <Preloader show={loaded} />
@@ -208,21 +267,51 @@ export default () => {
             <Breadcrumb.Item>
               <FontAwesomeIcon icon={faHome} />
             </Breadcrumb.Item>
-            <Breadcrumb.Item active>Quản lý bài đăng</Breadcrumb.Item>
+            <Breadcrumb.Item active>Quản lý sản phẩm</Breadcrumb.Item>
           </Breadcrumb>
-          <h4>Quản lý bài đăng</h4>
+          <h4>Quản lý sản phẩm</h4>
         </div>
       </div>
 
       <div className="table-settings mb-4">
-        <Row className="justify-content-between align-items-center">
-          <Col xs={8} md={6} lg={3} xl={4}>
-            <InputGroup>
-              <InputGroup.Text>
-                <FontAwesomeIcon icon={faSearch} />
-              </InputGroup.Text>
-              <Form.Control type="text" placeholder="Search" />
-            </InputGroup>
+        <Row className="justify-content-left align-items-end">
+          <Col xs={12} md={4} lg={3} className="category-filter mb-1">
+            <FormLabel>Loại sản phẩm</FormLabel>
+            <Form.Select name="category_id" onChange={(e) => onChangeFilter(e)}>
+              <option value={0}>Tất cả</option>
+              {categoryData?.map((data, index) => (
+                <option key={index} value={data.id}>
+                  {data.value}
+                </option>
+              ))}
+            </Form.Select>
+          </Col>
+          <Col xs={6} md={3} lg={2} className="category-filter mb-1">
+            <FormLabel>Trạng thái khóa</FormLabel>
+            <Form.Select name="is_block" onChange={(e) => onChangeFilter(e)}>
+              <option value={-1}>Tất cả</option>
+              {blockStatus?.map((data, index) => (
+                <option key={index} value={data.id}>
+                  {data.value}
+                </option>
+              ))}
+            </Form.Select>
+          </Col>
+          <Col xs={6} md={3} lg={2} className="category-filter mb-1">
+            <FormLabel>Trạng thái giao dịch</FormLabel>
+            <Form.Select name="sold" onChange={(e) => onChangeFilter(e)}>
+              <option value={-1}>Tất cả</option>
+              {soldStatus?.map((data, index) => (
+                <option key={index} value={data.id}>
+                  {data.value}
+                </option>
+              ))}
+            </Form.Select>
+          </Col>
+          <Col xs={6} md={3} lg={2} className="category-filter mb-1">
+            <Button onClick={onSubmitFilter} style={{ width: "100%" }}>
+              Lọc
+            </Button>
           </Col>
         </Row>
       </div>

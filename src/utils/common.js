@@ -43,3 +43,52 @@ export const handleCalculateTime = (time) => {
   }
   return "";
 };
+
+export const insertParam = (key, value) => {
+  key = encodeURIComponent(key);
+  value = encodeURIComponent(value);
+
+  // kvp looks like ['key1=value1', 'key2=value2', ...]
+  var kvp = document.location.search.substr(1).split("&");
+  let i = 0;
+
+  for (; i < kvp.length; i++) {
+    if (kvp[i].startsWith(key + "=")) {
+      let pair = kvp[i].split("=");
+      pair[1] = value;
+      kvp[i] = pair.join("=");
+      break;
+    }
+  }
+
+  if (i >= kvp.length) {
+    kvp[kvp.length] = [key, value].join("=");
+  }
+
+  // can return this or...
+  let params = kvp.join("&");
+  return params;
+};
+
+export const deleteParam = (parameter) => {
+  var url = document.location.href;
+  var urlparts = url.split("?");
+
+  if (urlparts.length >= 2) {
+    var urlBase = urlparts.shift();
+    var queryString = urlparts.join("?");
+
+    var prefix = encodeURIComponent(parameter) + "=";
+    var pars = queryString.split(/[&;]/g);
+    for (var i = pars.length; i-- > 0; )
+      if (pars[i].lastIndexOf(prefix, 0) !== -1) pars.splice(i, 1);
+    url = urlBase + "?" + pars.join("&");
+    window.history.pushState("", document.title, url); // added this line to push the new url directly to url bar .
+  }
+};
+
+export const getParam = (feild) => {
+  var url = new URL(window.location.href);
+  var paramString = url.searchParams.get(feild);
+  return paramString;
+};

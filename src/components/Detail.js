@@ -268,7 +268,7 @@ export default function Detail({ setLoaded }) {
                     value={postDetail?.status}
                     disabled={true}
                   >
-                    <option value="0">Tình trạng</option>
+                    <option value={null}>Tình trạng</option>
                     {statusData?.map((data, index) => (
                       <option key={index} value={data.id}>
                         {data.value}
@@ -331,7 +331,7 @@ export default function Detail({ setLoaded }) {
                         value={postDetail?.productMobile?.brand_id}
                         disabled={true}
                       >
-                        <option>Hãng sản xuất</option>
+                        <option value={0}>Hãng sản xuất</option>
                         {brandCategory &&
                           brandCategory?.map((data, index) => (
                             <option key={index} value={data.id}>
@@ -372,7 +372,7 @@ export default function Detail({ setLoaded }) {
                         value={postDetail?.storage}
                         disabled={true}
                       >
-                        <option value="0">Dung lượng bộ nhớ</option>
+                        <option value={0}>Dung lượng bộ nhớ</option>
                         {storageData?.map((data, index) => (
                           <option key={index} value={data.value}>
                             {`${data.value}GB`}
@@ -703,23 +703,43 @@ export default function Detail({ setLoaded }) {
                 readOnly
               ></textarea>
             </div>
-            <div className="form-outline mb-3">
-              <label className="form-label" htmlFor="post-public">
-                Chế độ bài viết
-              </label>
-              <select
-                className="form-select"
-                aria-label="Disabled select example"
-                required
-                name="category"
-                id="post-public"
-                placeholder="Chế độ bài viết"
-                value={postDetail?.public_status}
-                disabled={true}
-              >
-                <option value={1}>Công khai</option>
-                <option value={0}>Riêng tư</option>
-              </select>
+            <div className="row">
+              <div className="form-outline mb-3 col-6">
+                <label className="form-label" htmlFor="post-public">
+                  Chế độ bài viết
+                </label>
+                <select
+                  className="form-select"
+                  aria-label="Disabled select example"
+                  required
+                  name="category"
+                  id="post-public"
+                  placeholder="Chế độ bài viết"
+                  value={postDetail?.public_status}
+                  disabled={true}
+                >
+                  <option value={1}>Công khai</option>
+                  <option value={0}>Riêng tư</option>
+                </select>
+              </div>
+              <div className="form-outline mb-3 col-6">
+                <label className="form-label" htmlFor="post-public">
+                  Trạng thái giao dịch
+                </label>
+                <select
+                  className="form-select"
+                  aria-label="Disabled select example"
+                  required
+                  name="category"
+                  id="post-public"
+                  placeholder="Chế độ bài viết"
+                  value={postDetail?.sold}
+                  disabled={true}
+                >
+                  <option value={1}>Đã bán</option>
+                  <option value={0}>Chưa bán</option>
+                </select>
+              </div>
             </div>
           </form>
         </div>
