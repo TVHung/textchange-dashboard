@@ -1,20 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCheck,
-  faCog,
-  faHome,
-  faSearch,
-} from "@fortawesome/free-solid-svg-icons";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
 import {
   Col,
   Row,
   Form,
   Button,
-  ButtonGroup,
+  FormLabel,
   Breadcrumb,
-  InputGroup,
-  Dropdown,
 } from "@themesberg/react-bootstrap";
 
 import { UserTable } from "../components/Tables";
@@ -24,6 +17,8 @@ import {
   apiSetBlockUser,
   headers,
   apiSetAdminUser,
+  blockStatus,
+  roleStatus,
 } from "../constants";
 import { Modal } from "@themesberg/react-bootstrap";
 import { getCookie } from "../utils/cookie";
@@ -31,6 +26,8 @@ import Preloader from "../components/Preloader";
 import { toast } from "react-toastify";
 import { scrollToTop } from "../utils/common";
 import ScrollUp from "../components/ScrollUp";
+
+var filter = [];
 
 export default () => {
   const [users, setUsers] = useState([]);
@@ -59,13 +56,21 @@ export default () => {
       setData({});
       setMess({});
       setLoaded(false);
+      filter = [];
     };
   }, []);
 
   const fetchUsers = async (pageNumber = 1) => {
     setLoaded(true);
+    //get option from array object
+    let option = "";
+    for (let index = 0; index < filter.length; index++) {
+      option += `${filter[index].name}=${filter[index].value}`;
+      if (index < filter.length - 1) option += "&";
+    }
+    let apiCall = `${apiGetUser}?page=${pageNumber}&${option}`;
     await axios
-      .get(`${apiGetUser}?page=${pageNumber}`, {
+      .get(apiCall, {
         headers: {
           "Content-type": "application/json",
           Authorization: `Bearer ${getCookie("access_token")}`,
@@ -215,6 +220,44 @@ export default () => {
     handleClose();
   };
 
+  const onChangeFilter = (e) => {
+    const { name, value } = e.target;
+    //check exist object
+    const isFound = filter.some((element) => {
+      return element.name === name ? true : false;
+    });
+    //filter if name exist
+    if (isFound) {
+      filter = filter.filter((item) => item.name !== name);
+    }
+    switch (name) {
+      case "is_block":
+        if (parseInt(value) >= 0) {
+          filter.push({
+            name: name,
+            value: value,
+          });
+        }
+        break;
+      case "is_admin":
+        if (parseInt(value) >= 0) {
+          filter.push({
+            name: name,
+            value: value,
+          });
+        }
+        break;
+      default:
+        break;
+    }
+    console.log(filter, isFound);
+  };
+
+  const onSubmitFilter = (e) => {
+    e.preventDefault();
+    fetchUsers();
+  };
+
   return (
     <>
       <Preloader show={loaded} />
@@ -254,6 +297,39 @@ export default () => {
           <h4>Quản lý người dùng</h4>
         </div>
       </div>
+
+      <div className="table-settings mb-4">
+        <Row className="justify-content-left align-items-end">
+          <Col xs={6} md={3} lg={2} className="user-filter mb-1">
+            <FormLabel>Trạng thái khóa</FormLabel>
+            <Form.Select name="is_block" onChange={(e) => onChangeFilter(e)}>
+              <option value={-1}>Tất cả</option>
+              {blockStatus?.map((data, index) => (
+                <option key={index} value={data.id}>
+                  {data.value}
+                </option>
+              ))}
+            </Form.Select>
+          </Col>
+          <Col xs={6} md={3} lg={2} className="user-filter mb-1">
+            <FormLabel>Vai trò</FormLabel>
+            <Form.Select name="is_admin" onChange={(e) => onChangeFilter(e)}>
+              <option value={-1}>Tất cả</option>
+              {roleStatus?.map((data, index) => (
+                <option key={index} value={data.id}>
+                  {data.value}
+                </option>
+              ))}
+            </Form.Select>
+          </Col>
+          <Col xs={6} md={3} lg={2} className="user-filter mb-1">
+            <Button onClick={onSubmitFilter} style={{ width: "100%" }}>
+              Lọc
+            </Button>
+          </Col>
+        </Row>
+      </div>
+
       <UserTable
         users={users}
         actionUser={actionUser}

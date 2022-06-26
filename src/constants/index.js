@@ -118,6 +118,10 @@ export const soldStatus = [
   { id: 1, value: "Đã bán" },
   { id: 0, value: "Chưa bán" },
 ];
+export const roleStatus = [
+  { id: 1, value: "Quản trị viên" },
+  { id: 0, value: "Người dùng" },
+];
 //filter
 export const priceStep = 200000;
 export const marksPrice = [
