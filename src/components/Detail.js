@@ -4,6 +4,8 @@ import {
   apiFetchPostDetail,
   apiGetBrandByCategory,
   categoryData,
+  commandData,
+  resolutionData,
   statusData,
   storageData,
   storageTypeData,
@@ -314,6 +316,80 @@ export default function Detail({ setLoaded }) {
                 </div>
               </div>
             </div>
+            {/* -----------------new------------------ */}
+            {Number(postInfor.category) == 1 && (
+              <div className="col">
+                <div className="form-outline position-relative">
+                  <label className="form-label" htmlFor="post-pin">
+                    Dung lượng pin
+                  </label>
+                  <input
+                    type="number"
+                    id="post-pin"
+                    className="form-control"
+                    placeholder="Dung lượng pin"
+                    min={0}
+                    name="pin"
+                    disabled={true}
+                    value={postDetail?.productMobile?.pin || ""}
+                  />
+                </div>
+              </div>
+            )}
+            {Number(postInfor.category) < 3 && (
+              <div className="col">
+                <div className="form-outline">
+                  <label className="form-label" htmlFor="post-resolution">
+                    Độ phân giải màn hình
+                  </label>
+                  <select
+                    className="form-select"
+                    aria-label="Disabled select example"
+                    name="resolution"
+                    id="post-resolution"
+                    disabled={true}
+                    value={
+                      postDetail?.productMobile?.resolution
+                        ? postDetail?.productMobile?.resolution
+                        : postDetail?.productLaptop?.resolution || ""
+                    }
+                  >
+                    <option value={""}>Độ phân giải màn hình</option>
+                    {resolutionData?.map((data, index) => (
+                      <option key={index} value={data.id}>
+                        {`${data.value}`}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            )}
+            <div className="row mb-3">
+              <div className="col">
+                <div className="form-outline">
+                  <label className="form-label" htmlFor="post-command">
+                    Nhu cầu sử dụng
+                  </label>
+                  <select
+                    className={"form-select"}
+                    aria-label="Disabled select example"
+                    name="command"
+                    id="post-command"
+                    disabled={true}
+                    value={postInfor?.command || 0}
+                  >
+                    <option>Nhu cầu sử dụng</option>
+                    {commandData &&
+                      commandData?.map((data, index) => (
+                        <option key={index} value={data.id}>
+                          {data.value}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+            {/* ------------------------------------ */}
             {Number(postInfor?.category) == 1 && (
               <>
                 <div className="row mb-3">
