@@ -102,7 +102,7 @@ export const storageTypeData = [
   { id: 3, value: "SSHD", type: 2 },
 ];
 export const categoryData = [
-  { id: 1, value: "Điện thoại, máy tính bảng" },
+  { id: 1, value: "Mobile" },
   { id: 2, value: "Laptop" },
   { id: 3, value: "Pc" },
 ];
@@ -349,4 +349,18 @@ export const marksStorageData = [
     value: 100,
     label: "4096",
   },
+];
+export const commandData = [
+  { id: 1, value: "Sử dụng cơ bản" },
+  { id: 2, value: "Sử dụng giải trí nhẹ nhàng" },
+  { id: 3, value: "Sử dụng để chơi game" },
+  { id: 4, value: "Sử dụng để làm các tác vụ nặng" },
+];
+export const resolutionData = [
+  { id: 1, value: "HD (1366x768)" },
+  { id: 2, value: "HD+ (1600x900)" },
+  { id: 3, value: "FullHD (1920x1080)" },
+  { id: 4, value: "2K (2560x1440)" },
+  { id: 5, value: "4K (3840x2160)" },
+  { id: 6, value: "5K (5120x2880)" },
 ];
