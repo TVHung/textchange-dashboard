@@ -60,8 +60,8 @@ export default () => {
       .then((res) => {
         const data = res.data;
         if (data.access_token && data.user.is_admin === 1) {
-          setCookie("access_token", data.access_token, 3600);
-          window.location.href = "/texchange-dashboard?#/";
+          setCookie("access_token", data.access_token, 86400);
+          window.location.href = "/";
         } else if (data?.status == -1) {
           let error = "error";
           setUserValidation((prevState) => ({
