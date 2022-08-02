@@ -527,7 +527,7 @@ export const RankingWidget = () => {
 };
 
 export const SalesValueWidget = (props) => {
-  const { title, value, percentage, data } = props;
+  const { title, value, percentage, data, typeName } = props;
   const percentageIcon = percentage < 0 ? faAngleDown : faAngleUp;
   const percentageColor = percentage < 0 ? "text-danger" : "text-success";
   const [type, setType] = useState("week");
@@ -542,15 +542,9 @@ export const SalesValueWidget = (props) => {
       <Card.Header className="d-flex flex-row align-items-center flex-0">
         <div className="d-block">
           <h5 className="fw-normal mb-2">{title}</h5>
-          <h3>{value} Lượt</h3>
-          <small className="fw-bold mt-2">
-            <span className="me-2">Yesterday</span>
-            <FontAwesomeIcon
-              icon={percentageIcon}
-              className={`${percentageColor} me-1`}
-            />
-            <span className={percentageColor}>{percentage}%</span>
-          </small>
+          <h3>
+            {data.reduce((partialSum, a) => partialSum + a, 0)} {typeName}
+          </h3>
         </div>
         <div className="d-flex ms-auto">
           <Button
@@ -563,16 +557,6 @@ export const SalesValueWidget = (props) => {
           >
             Week
           </Button>
-          <Button
-            name="month"
-            size="sm"
-            className={
-              type == "month" ? "me-2 btn-secondary" : "me-2 btn-primary"
-            }
-            onClick={(e) => setTypeGraph(e)}
-          >
-            Month
-          </Button>
         </div>
       </Card.Header>
       <Card.Body className="p-2">
@@ -583,7 +567,7 @@ export const SalesValueWidget = (props) => {
 };
 
 export const SalesValueWidgetPhone = (props) => {
-  const { title, value, percentage } = props;
+  const { title, value, percentage, typeName, data } = props;
   const percentageIcon = percentage < 0 ? faAngleDown : faAngleUp;
   const percentageColor = percentage < 0 ? "text-danger" : "text-success";
 
@@ -599,15 +583,9 @@ export const SalesValueWidgetPhone = (props) => {
       <Card.Header className="d-md-flex flex-row align-items-center flex-0">
         <div className="d-block mb-3 mb-md-0">
           <h5 className="fw-normal mb-2">{title}</h5>
-          <h3>{value} Lượt</h3>
-          <small className="fw-bold mt-2">
-            <span className="me-2">Yesterday</span>
-            <FontAwesomeIcon
-              icon={percentageIcon}
-              className={`${percentageColor} me-1`}
-            />
-            <span className={percentageColor}>{percentage}%</span>
-          </small>
+          <h3>
+            {data.reduce((partialSum, a) => partialSum + a, 0)} {typeName}
+          </h3>
         </div>
         <div className="d-flex ms-auto">
           <Button
@@ -619,16 +597,6 @@ export const SalesValueWidgetPhone = (props) => {
             onClick={(e) => setTypeGraph(e)}
           >
             Week
-          </Button>
-          <Button
-            size="sm"
-            name="month"
-            className={
-              type == "month" ? "me-2 btn-secondary" : "me-2 btn-primary"
-            }
-            onClick={(e) => setTypeGraph(e)}
-          >
-            Month
           </Button>
         </div>
       </Card.Header>

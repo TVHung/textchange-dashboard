@@ -14,6 +14,8 @@ export const apiSetBlockUser = `${api}/auth/set-block-user`;
 export const apiSetAdminUser = `${api}/auth/set-admin-user`;
 export const apiGetCountUser = `${api}/auth/user-count`;
 export const apiUserRecently = `${api}/auth/user-recently`;
+export const apiUserStatic = `${api}/auth/new-user-static`;
+
 //profile
 export const apiProfile = `${api}/profiles`;
 export const apiChangeAvatar = `${api}/change-avatar`;
@@ -34,6 +36,7 @@ export const apiSetBlockPost = `${api}/set-block-product`;
 export const apiFetchMostView = `${api}/most-view`;
 export const apiRecently = `${api}/dashboard-recently-product`;
 export const apiViewStatic = `${api}/view-static`;
+export const apiProductStatic = `${api}/new-product-static`;
 
 //api product trade
 export const apiPostTrade = `${api}/product-trades`;

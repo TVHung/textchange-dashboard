@@ -2,47 +2,35 @@ import React, { useEffect, useState } from "react";
 import Chartist from "react-chartist";
 import ChartistTooltip from "chartist-plugin-tooltips-updated";
 
-export const SalesValueChart = ({ type, data }) => {
-  const [xWeek, setXWeek] = useState([]);
-  const [yWeek, setYWeek] = useState([]);
-  useEffect(() => {
-    setXWeek(
-      data.map(function (obj) {
-        return obj.date;
-      })
-    );
-    setYWeek(
-      data.map(function (obj) {
-        return obj.views;
-      })
-    );
-    return () => {
-      setXWeek([]);
-      setYWeek([]);
-    };
-  }, [data]);
+const today = new Date();
+const yesterday = new Date(today);
+yesterday.setDate(yesterday.getDate() - 1);
+const yesterday2 = new Date(today);
+yesterday2.setDate(yesterday2.getDate() - 2);
+const yesterday3 = new Date(today);
+yesterday3.setDate(yesterday3.getDate() - 3);
+const yesterday4 = new Date(today);
+yesterday4.setDate(yesterday4.getDate() - 4);
+const yesterday5 = new Date(today);
+yesterday5.setDate(yesterday5.getDate() - 5);
+const yesterday6 = new Date(today);
+yesterday6.setDate(yesterday6.getDate() - 6);
+const date = [
+  yesterday6.toLocaleDateString(),
+  yesterday5.toLocaleDateString(),
+  yesterday4.toLocaleDateString(),
+  yesterday3.toLocaleDateString(),
+  yesterday2.toLocaleDateString(),
+  yesterday.toLocaleDateString(),
+  today.toLocaleDateString(),
+];
 
+export const SalesValueChart = ({ type, data }) => {
+  const [xWeek, setXWeek] = useState(date);
+  const [yWeek, setYWeek] = useState();
   const dataWeek = {
     labels: xWeek,
-    series: [yWeek],
-  };
-
-  const dataMonth = {
-    labels: [
-      "Tháng 1",
-      "Tháng 2",
-      "Tháng 3",
-      "Tháng 4",
-      "Tháng 5",
-      "Tháng 6",
-      "Tháng 7",
-      "Tháng 8",
-      "Tháng 9",
-      "Tháng 10",
-      "Tháng 11",
-      "Tháng 12",
-    ],
-    series: [[1, 2, 2, 3, 3, 4, 3, 2, 3, 3, 4, 3]],
+    series: [data],
   };
 
   const options = {
@@ -57,7 +45,7 @@ export const SalesValueChart = ({ type, data }) => {
       // On the y-axis start means left and end means right
       showGrid: true,
       showLabel: true,
-      labelInterpolationFnc: (value) => `$${value / 1000}k`,
+      labelInterpolationFnc: (value) => `${value}`,
     },
   };
 
@@ -65,7 +53,7 @@ export const SalesValueChart = ({ type, data }) => {
 
   return (
     <Chartist
-      data={type == "week" ? dataWeek : dataMonth}
+      data={dataWeek}
       options={{ ...options, plugins }}
       type="Line"
       className="ct-series-g ct-double-octave"
@@ -73,15 +61,12 @@ export const SalesValueChart = ({ type, data }) => {
   );
 };
 
-export const SalesValueChartphone = ({ type }) => {
+export const SalesValueChartphone = ({ type, data }) => {
+  const [xWeek, setXWeek] = useState(date);
+  const [yWeek, setYWeek] = useState();
   const dataWeek = {
-    labels: ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật"],
-    series: [[1, 2, 2, 3, 3, 4, 3]],
-  };
-
-  const dataMonth = {
-    labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
-    series: [[1, 2, 2, 3, 3, 4, 3, 2, 3, 3, 4, 3]],
+    labels: xWeek,
+    series: [data],
   };
 
   const options = {
@@ -96,7 +81,7 @@ export const SalesValueChartphone = ({ type }) => {
       // On the y-axis start means left and end means right
       showGrid: true,
       showLabel: true,
-      labelInterpolationFnc: (value) => `$${value / 1}k`,
+      labelInterpolationFnc: (value) => `${value}`,
     },
   };
 
@@ -104,7 +89,7 @@ export const SalesValueChartphone = ({ type }) => {
 
   return (
     <Chartist
-      data={type == "week" ? dataWeek : dataMonth}
+      data={dataWeek}
       options={{ ...options, plugins }}
       type="Line"
       className="ct-series-g ct-major-tenth"

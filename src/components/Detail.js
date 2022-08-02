@@ -321,7 +321,7 @@ export default function Detail({ setLoaded }) {
               <div className="col">
                 <div className="form-outline position-relative">
                   <label className="form-label" htmlFor="post-pin">
-                    Dung lượng pin
+                    Dung lượng pin (mah)
                   </label>
                   <input
                     type="number"
@@ -396,8 +396,7 @@ export default function Detail({ setLoaded }) {
                   <div className="col">
                     <div className="form-outline">
                       <label className="form-label" htmlFor="post-brand">
-                        Hãng sản xuất&nbsp;
-                        <span style={{ color: "red" }}>*</span>
+                        Hãng sản xuất
                       </label>
                       <select
                         className="form-select"
@@ -728,7 +727,7 @@ export default function Detail({ setLoaded }) {
             </div>
             <div className="form-outline mb-3">
               <label className="form-label" htmlFor="post-price">
-                Giá bán
+                Giá bán (VNĐ)
               </label>
               <input
                 type="number"
