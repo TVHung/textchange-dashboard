@@ -5,6 +5,7 @@ import {
   apiGetBrandByCategory,
   categoryData,
   commandData,
+  headers,
   resolutionData,
   statusData,
   storageData,
@@ -84,7 +85,7 @@ export default function Detail({ setLoaded }) {
   const [postDetail, setPostDetail] = useState({});
   const fetchAllData = async (postId) => {
     let apiPostDetail = `${apiFetchPostDetail}/${postId}`;
-    const requestPost = axios.get(apiPostDetail);
+    const requestPost = axios.get(apiPostDetail, { headers: headers });
     await axios
       .all([requestPost])
       .then(
@@ -137,6 +138,7 @@ export default function Detail({ setLoaded }) {
       color: data.color,
       video_url: data.video_url,
       view: data.view,
+      command: data.command,
     });
   };
 
