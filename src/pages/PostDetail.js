@@ -35,16 +35,6 @@ export default () => {
           </Breadcrumb>
           <h4>Chi tiết bài viết</h4>
         </div>
-        <div className="btn-toolbar mb-2 mb-md-0">
-          <ButtonGroup>
-            <Button variant="outline-primary" size="sm">
-              Khóa bài viết
-            </Button>
-            <Button variant="outline-primary" size="sm">
-              Xóa bài viết
-            </Button>
-          </ButtonGroup>
-        </div>
       </div>
       <Detail setLoaded={setLoaded} />
     </>
